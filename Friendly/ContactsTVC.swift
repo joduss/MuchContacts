@@ -60,16 +60,17 @@ class ContactsTVC: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("contactCell", forIndexPath: indexPath)
         
         let text = NSMutableAttributedString(string: "")
+        let fontSize = CGFloat(18)
         
         let contact = contacts[indexPath.row]
         if let firstname = contact.firstname, lastname = contact.lastname {
-            text.appendAttributedString(NSMutableAttributedString(string: " " + firstname, attributes: [NSFontAttributeName : UIFont.systemFontOfSize(13)]))
-            text.appendAttributedString(NSMutableAttributedString(string: " " + lastname, attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(13)]))
+            text.appendAttributedString(NSMutableAttributedString(string: " " + firstname, attributes: [NSFontAttributeName : UIFont.systemFontOfSize(fontSize)]))
+            text.appendAttributedString(NSMutableAttributedString(string: " " + lastname, attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(fontSize)]))
         }
         else {
             //If firstname and lastname are nil, it's likely a company
             if let companyName = contact.companyName {
-                text.appendAttributedString(NSMutableAttributedString(string: companyName, attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(13)]))
+                text.appendAttributedString(NSMutableAttributedString(string: companyName, attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(fontSize)]))
             }
             else {
                 text.appendAttributedString(NSMutableAttributedString(string:"unknown [null]"))
