@@ -57,6 +57,7 @@ class Contact: NSObject {
     var emails : [EmailAddress]
     var phones : [PhoneNumber]
     var contactType : ContactType?
+    var contactID : String? // TODO SUPPORT ID
     
     
     

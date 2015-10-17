@@ -34,4 +34,12 @@ class HTTPComm: NSObject {
         send(session: session, request: request, completionHandler: handler)
     }
     
+    
+    //Send a put request
+    class func putJSON(session session: NSURLSession, request: NSMutableURLRequest, completionHandler handler:(NSData?, NSURLResponse?, NSError?) -> Void) {
+        //only set the GET HTTPMethod
+        request.HTTPMethod = "PUT"
+        send(session: session, request: request, completionHandler: handler)
+    }
+    
 }

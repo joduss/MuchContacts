@@ -9,7 +9,7 @@
 import XCTest
 import Foundation
 
-@testable import Friendly
+@testable import MuchContacts
 
 class TestNetworkAndObjects: XCTestCase {
     
@@ -17,6 +17,7 @@ class TestNetworkAndObjects: XCTestCase {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
         let expectation = expectationWithDescription("wait for logout")
+        
         apiHelper.logout( { _ in
             expectation.fulfill()
         })
@@ -38,7 +39,7 @@ class TestNetworkAndObjects: XCTestCase {
         do {
             let jsonObject = try NSJSONSerialization.JSONObjectWithData(jsonContactData!, options: NSJSONReadingOptions.AllowFragments) as! Dictionary<String, AnyObject>
             
-            let c = APIJSONProcessing.contactFromJSONDictionary(jsonObject)
+            let c = APIJSONProcessing.parseContactFromJSONDictionary(jsonObject)
             XCTAssertEqual(c?.firstname, "Adwaittest123")
             XCTAssertEqual(c?.lastname, "Adwait123")
             
@@ -60,7 +61,7 @@ class TestNetworkAndObjects: XCTestCase {
         
         do {
             let jsonObject = try NSJSONSerialization.JSONObjectWithData(jsonContactData!, options: NSJSONReadingOptions.AllowFragments) as! Array<Dictionary<String, AnyObject>>
-            let contacts = APIJSONProcessing.multipleContactsFromJSONContactArray(jsonObject)
+            let contacts = APIJSONProcessing.parseMultipleContactsFromJSONContactArray(jsonObject)
             XCTAssertEqual(4, contacts.count)
             XCTAssertEqual(contacts[0].lastname, "AAA")
             XCTAssertEqual(contacts[1].lastname, "Bob")
@@ -154,18 +155,127 @@ class TestNetworkAndObjects: XCTestCase {
                 }
                 XCTAssert(testContactFound)
                 XCTAssert(testCompanyFound)
-
+                
                 expectation.fulfill()
             })
         })
         waitForExpectationsWithTimeout(50, handler: nil)
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
+    
+    //Test that the interaction for a contact can be downloaded
+    //test that the parsing is done correctly
+    //That that the information parsed are correct and complete
+    func testDownloadInteraction() {
+        let expectation = expectationWithDescription("waiting")
+        apiHelper.login(username: "softswiss@gmail.com", password: "jonathan", completion: {(loggedIn, wrongCredentials) in
+            XCTAssert(loggedIn)
+            
+            //Now get the contacts to find the ID for Jonathan Bluewin
+            apiHelper.getAllContacts(0, completionHandler: {(contacts) in
+                var testContactFound = false
+                var contactID = ""
+                var desiredContact = Contact()
+                for contact in contacts {
+                    print("contact: \(contact.firstname), \(contact.lastname)")
+                    if(contact.firstname == "Test" && contact.lastname == "Interaction"){
+                        testContactFound = true
+                        contactID = contact.contactID!
+                        desiredContact = contact
+                    }
+                }
+                XCTAssert(testContactFound)
+                
+                //if contact ID not found, abord
+                guard testContactFound == true else {
+                    return
+                }
+                
+                //now load the interactions
+                apiHelper.getAllInteractionWithContact(desiredContact, completionHandler:{(interactions) in
+                    print("\(interactions)")
+                    XCTAssertEqual(interactions.count, 4)
+                    
+                    //check that one number called for that contact is +41707998080
+                    var numberFound = false
+                    for inter in interactions {
+                        if(inter.phoneNumber == "+41707008080") {
+                            numberFound = true
+                        }
+                        XCTAssert(inter.type == InteractionType.CALL)
+                        XCTAssert(inter.direction == InteractionDirection.OUTBOUND)
+                    }
+                    XCTAssert(numberFound)
+                    
+                    
+                    expectation.fulfill()
+                })
+                
+                
+            })
+            
+        })
+        waitForExpectationsWithTimeout(20, handler: nil)
     }
     
+    //Test to download interaction with empty contact information
+    //It should return an empty array
+    func testInteractionWithEmptyContact() {
+        let expectation = expectationWithDescription("waiting")
+        apiHelper.login(username: "softswiss@gmail.com", password: "jonathan", completion: {(loggedIn, wrongCredentials) in
+            XCTAssert(loggedIn)
+            apiHelper.getAllInteractionWithContact(Contact(), completionHandler:{(interactions) in
+                print("\(interactions)")
+                XCTAssertEqual(interactions.count, 0)
+                expectation.fulfill()
+            })
+        })
+        waitForExpectationsWithTimeout(20, handler: nil)
+    }
+    
+    
+    
+    //Test to add interaction in the server
+    func testInteractionCreation() {
+        let expectation = expectationWithDescription("waiting")
+        apiHelper.login(username: "softswiss@gmail.com", password: "jonathan", completion: {(loggedIn, wrongCredentials) in
+            XCTAssert(loggedIn)
+            
+            
+            //Will add interaction to "Writing Interaction"
+            apiHelper.getAllContacts(0, completionHandler: {(contacts) in
+                var desiredContact = Contact()
+                var found = false
+                for contact in contacts {
+                    if(contact.firstname == "Writing" && contact.lastname == "Interaction"){
+                        desiredContact = contact
+                        found = true
+                    }
+                }
+                XCTAssert(found)
+                let newInteraction = Interaction(interactionDirection: InteractionDirection.INBOUND,
+                    type: InteractionType.SMS,
+                    date: Int64(CFAbsoluteTimeGetCurrent()),
+                    phoneNumber: "+41706006060",
+                    contactID: desiredContact.contactID!)
+                
+                apiHelper.createInteraction(newInteraction, completionHandler:{success in
+                    XCTAssert(success)
+                    expectation.fulfill()
+            })
+            
+        })
+        
+    })
+    waitForExpectationsWithTimeout(20, handler: nil)
+}
+
+
+func testPerformanceExample() {
+    // This is an example of a performance test case.
+    self.measureBlock {
+        // Put the code you want to measure the time of here.
+    }
+}
+
 }
