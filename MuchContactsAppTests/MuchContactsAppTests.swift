@@ -1,15 +1,14 @@
 //
-//  FriendlyTests.swift
-//  FriendlyTests
+//  MuchContactsAppTests.swift
+//  MuchContactsAppTests
 //
-//  Created by Jonathan on 16/10/15.
+//  Created by Jonathan on 17/10/15.
 //  Copyright © 2015 ZaJo. All rights reserved.
 //
 
 import XCTest
-//@testable import MuchContacts
 
-class FriendlyTests: XCTestCase {
+class MuchContactsAppTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
