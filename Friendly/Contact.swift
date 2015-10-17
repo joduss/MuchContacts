@@ -69,7 +69,24 @@ class Contact: NSObject {
         super.init()
     }
     
-    
+    /** Return a name for a contact.
+    * If it's a person, it return the lastname if not null or empty. If it is, returns ""
+    * For company, firstname, lastname are nil, thus, return the companyName
+    * If company name is nil, return ""
+    */
+    func getBestNameForSorting() -> String {
+        if(Utility.stringNotNilNotEmpty(lastname)){
+            return lastname!
+        } else if( Utility.stringNotNilNotEmpty(firstname)) {
+            return firstname!
+        }
+        else if Utility.stringNotNilNotEmpty(companyName) {
+            return companyName!
+        }
+        else {
+            return ""
+        }
+    }
     
 
     

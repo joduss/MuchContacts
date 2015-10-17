@@ -121,36 +121,15 @@ class APIJSONProcessing: NSObject {
         
         //sort alphabetically
         newContacts.sortInPlace({(el1, el2) in
-            let s1 = getAStringFromAnyNameForContact(el1)
-            let s2 = getAStringFromAnyNameForContact(el2)
+            let s1 = el1.getBestNameForSorting()
+            let s2 = el2.getBestNameForSorting()
             return s1.lowercaseString < s2.lowercaseString
         })
         return newContacts
     }
     
-    /**Return a name for a contact.
-    * If it's a person, it return the lastname if not null or empty. If it is, returns ""
-    * For company, firstname, lastname are nil, thus, return the companyName
-    * If company name is nil, return ""
-    */
-    class func getAStringFromAnyNameForContact(c : Contact) -> String {
-        if(stringNotNilNotEmpty(c.lastname)){
-            return c.lastname!
-        } else if( stringNotNilNotEmpty(c.firstname)) {
-            return c.firstname!
-        }
-        else if stringNotNilNotEmpty(c.companyName) {
-            return c.companyName!
-        }
-        else {
-            return ""
-        }
-    }
-    
-    class func stringNotNilNotEmpty(s : String?) -> Bool {
-        return (s != nil && s != "")
-    }
-    
+
+
     
     /**
         Parse a JSON describing one interaction into a Interaction object

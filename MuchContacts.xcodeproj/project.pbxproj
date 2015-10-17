@@ -12,6 +12,7 @@
 		C80A42F31BD2AA400055A15F /* JGProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C80A42F21BD2AA370055A15F /* JGProgressHUD.framework */; };
 		C80A42F41BD2AA400055A15F /* JGProgressHUD.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C80A42F21BD2AA370055A15F /* JGProgressHUD.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C80A42FB1BD2B9B20055A15F /* ContactsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */; settings = {ASSET_TAGS = (); }; };
+		C896ED051BD2E75B0008BE17 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = C896ED041BD2E75B0008BE17 /* Utility.swift */; settings = {ASSET_TAGS = (); }; };
 		C8AC43461BD11CE70083146C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43451BD11CE70083146C /* AppDelegate.swift */; };
 		C8AC43481BD11CE70083146C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43471BD11CE70083146C /* ViewController.swift */; };
 		C8AC434B1BD11CE70083146C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C8AC43491BD11CE70083146C /* Main.storyboard */; };
@@ -93,6 +94,7 @@
 		C80A42D81BD274710055A15F /* jsonManyContactTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = jsonManyContactTest.json; sourceTree = "<group>"; };
 		C80A42E71BD2AA370055A15F /* JGProgressHUD.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JGProgressHUD.xcodeproj; path = JGProgressHUD/JGProgressHUD.xcodeproj; sourceTree = "<group>"; };
 		C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsTVC.swift; sourceTree = "<group>"; };
+		C896ED041BD2E75B0008BE17 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		C8AC43421BD11CE70083146C /* MuchContacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MuchContacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8AC43451BD11CE70083146C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C8AC43471BD11CE70083146C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 		C8AC43441BD11CE70083146C /* MuchContacts */ = {
 			isa = PBXGroup;
 			children = (
+				C896ED041BD2E75B0008BE17 /* Utility.swift */,
 				C8AC43821BD141390083146C /* API */,
 				C80A42F81BD2B3B80055A15F /* RepresentationObjects */,
 				C8AC43451BD11CE70083146C /* AppDelegate.swift */,
@@ -406,6 +409,7 @@
 				C8AC43811BD13EE30083146C /* APIHelper.swift in Sources */,
 				C8B9B27A1BD2421F007C92D7 /* Interaction.swift in Sources */,
 				C8AC43461BD11CE70083146C /* AppDelegate.swift in Sources */,
+				C896ED051BD2E75B0008BE17 /* Utility.swift in Sources */,
 				C8AC43861BD14E520083146C /* HTTPComm.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
