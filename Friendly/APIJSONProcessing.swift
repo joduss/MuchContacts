@@ -140,11 +140,15 @@ class APIJSONProcessing: NSObject {
         //and returns nil
         
         //check date and that there is a contact specified as callee or caller
-        guard let date = jsonDico[CREATED_KEY] as? Int64,
+
+        guard let date = jsonDico[CREATED_KEY] as? Int,
             contacts = jsonDico[INTERACTION_CONTACTS] as? Array<Dictionary<String,AnyObject>>
-            where contacts.count > 0 else {
+            where contacts.count > 0
+            else {
                 return nil
         }
+        print("cn: \(contacts.count)")
+
         
         //Check if the id for that contact is specified
         guard let contactID = contacts[0][ID_KEY] as? String else {
@@ -189,7 +193,7 @@ class APIJSONProcessing: NSObject {
         
         return Interaction(interactionDirection: interactionDirection,
             type: interactionType,
-            date: date,
+            date: Int64(date),
             phoneNumber: phoneNumber,
             contactID: contactID,
             duration:duration)        
@@ -200,6 +204,7 @@ class APIJSONProcessing: NSObject {
     Part a json containing many interactions into an array of Interaction objects
     */
     class func parseJSONArrayOfInteractions(jsonArray : Array<Dictionary<String, AnyObject>>) -> [Interaction] {
+        print(jsonArray)
         var interactions = Array<Interaction>()
         for dic in jsonArray {
             if let interaction = parseJSONInteractionToInteractionObject(dic) {

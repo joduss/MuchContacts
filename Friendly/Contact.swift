@@ -88,6 +88,28 @@ class Contact: NSObject {
         }
     }
     
+    /**
+* returns a name to display to the user
+* If its a company, firstname and lastname will be nil, thus will return the companyName property
+*If its a person, it depends. But a name will be returns.
+*/
+    func nameToDisplay() -> String {
+        if(Utility.stringNotNilNotEmpty(lastname) && Utility.stringNotNilNotEmpty(firstname)){
+            return firstname! + " " + lastname!
+        } else if( Utility.stringNotNilNotEmpty(firstname)) {
+            return firstname!
+        }
+        else if( Utility.stringNotNilNotEmpty(lastname)) {
+            return lastname!
+        }
+        else if Utility.stringNotNilNotEmpty(companyName) {
+            return companyName!
+        }
+        else {
+            return ""
+        }
+    }
+    
 
     
 }

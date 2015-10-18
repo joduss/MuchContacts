@@ -30,7 +30,7 @@
 		C8B9B28C1BD2706D007C92D7 /* TestNetworkAndObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43771BD11CFA0083146C /* TestNetworkAndObjects.swift */; settings = {ASSET_TAGS = (); }; };
 		C8D4F26C1BD394DB00701FC8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8D4F26B1BD394DB00701FC8 /* Security.framework */; };
 		C8D4F2761BD3EEC800701FC8 /* JNKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C8D4F2751BD3EEC800701FC8 /* JNKeychain.m */; settings = {ASSET_TAGS = (); }; };
-		C8D4F27B1BD4012400701FC8 /* ContactInformationTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D4F27A1BD4012400701FC8 /* ContactInformationTVC.swift */; settings = {ASSET_TAGS = (); }; };
+		C8D4F27D1BD401B600701FC8 /* ContactInformationTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D4F27C1BD401B600701FC8 /* ContactInformationTVC.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,7 +123,7 @@
 		C8D4F2741BD3EEA100701FC8 /* JNKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JNKeychain.h; sourceTree = "<group>"; };
 		C8D4F2751BD3EEC800701FC8 /* JNKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNKeychain.m; sourceTree = "<group>"; };
 		C8D4F2781BD3EF1700701FC8 /* MuchContacts-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MuchContacts-Bridging-Header.h"; sourceTree = "<group>"; };
-		C8D4F27A1BD4012400701FC8 /* ContactInformationTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactInformationTVC.swift; sourceTree = "<group>"; };
+		C8D4F27C1BD401B600701FC8 /* ContactInformationTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactInformationTVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -259,9 +259,9 @@
 		C8D4F2791BD400F700701FC8 /* VC classes */ = {
 			isa = PBXGroup;
 			children = (
+				C8D4F27C1BD401B600701FC8 /* ContactInformationTVC.swift */,
 				C8AC43471BD11CE70083146C /* ViewController.swift */,
 				C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */,
-				C8D4F27A1BD4012400701FC8 /* ContactInformationTVC.swift */,
 			);
 			name = "VC classes";
 			sourceTree = "<group>";
@@ -440,7 +440,7 @@
 				C8AC43841BD145AF0083146C /* DebugFunctions.swift in Sources */,
 				C8AC43811BD13EE30083146C /* APIHelper.swift in Sources */,
 				C8B9B27A1BD2421F007C92D7 /* Interaction.swift in Sources */,
-				C8D4F27B1BD4012400701FC8 /* ContactInformationTVC.swift in Sources */,
+				C8D4F27D1BD401B600701FC8 /* ContactInformationTVC.swift in Sources */,
 				C8AC43461BD11CE70083146C /* AppDelegate.swift in Sources */,
 				C896ED051BD2E75B0008BE17 /* Utility.swift in Sources */,
 				C8AC43861BD14E520083146C /* HTTPComm.swift in Sources */,

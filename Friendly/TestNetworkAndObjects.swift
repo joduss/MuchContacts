@@ -199,11 +199,12 @@ class TestNetworkAndObjects: XCTestCase {
                     //check that one number called for that contact is +41707998080
                     var numberFound = false
                     for inter in interactions {
-                        if(inter.phoneNumber == "+41707008080") {
+                        if(inter.phoneNumber == "+41705005050") {
                             numberFound = true
+                        XCTAssertEqual(inter.type, InteractionType.CALL)
+                        XCTAssertEqual(inter.direction,InteractionDirection.OUTBOUND)
                         }
-                        XCTAssert(inter.type == InteractionType.CALL)
-                        XCTAssert(inter.direction == InteractionDirection.OUTBOUND)
+
                     }
                     XCTAssert(numberFound)
                     

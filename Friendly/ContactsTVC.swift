@@ -123,6 +123,11 @@ class ContactsTVC: UITableViewController {
     }
     */
     
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.performSegueWithIdentifier("showContactDetailsSegue", sender: contacts[indexPath.row])
+    }
+    
     /*
     // MARK: - Navigation
     
@@ -132,5 +137,12 @@ class ContactsTVC: UITableViewController {
     // Pass the selected object to the new view controller.
     }
     */
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if(segue.identifier == "showContactDetailsSegue"){
+            let vc = segue.destinationViewController as! ContactInformationTVC
+            vc.contact = sender as! Contact
+            vc.allContact = contacts
+        }
+    }
     
 }
