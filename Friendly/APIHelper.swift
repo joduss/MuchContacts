@@ -176,7 +176,7 @@ class APIHelper: NSObject {
     
     /* Get the TriggerToken. If the device was not registered, it will be done*/
     private func getTriggerToken(completion:((loggedIn: Bool, wrongCredentials: Bool)  -> Void)?=nil) {
-        let url = NSURL(string: baseUrl + "/triggerDevices?deviceId=iphone_access")
+        let url = NSURL(string: baseUrl + "/triggerDevices?deviceId=1111141-11111-1111-1111")
         let request = NSMutableURLRequest(URL: url!)
         
         
@@ -247,9 +247,14 @@ class APIHelper: NSObject {
             }
         }
         
+        //generate unique ID:
+        let part1 = arc4random_uniform(100000)
+        let part2 = arc4random_uniform(100000)
+        let part3 = arc4random_uniform(100000)
+
         
         //set the body:
-        let dataParam = ["deviceId" : "iphone_access", "name" : "iphone"]
+        let dataParam = ["deviceId" : "\(part1)-\(part2)-\(part3)", "name" : "iphone2"]
         
         guard let authenticationToken = authToken else {
             completion?(loggedIn: false, wrongCredentials: false)
@@ -287,6 +292,7 @@ class APIHelper: NSObject {
         
         let taskAfterCompletion = {
             (data : NSData?, response:NSURLResponse?, error:NSError?) -> Void in
+            self.removeKeychainData()
             guard let response = response as? NSHTTPURLResponse else {
                 //If the server cannot be reached, the "logout" is failed
                 //But we still accept that situation (certainly not ideal for security
@@ -304,7 +310,6 @@ class APIHelper: NSObject {
             self.expire = nil
             self.triggerToken = nil
             completionHandler?(success: true)
-            self.removeKeychainData()
         }
         HTTPComm.postJSON(session: session, request: request, completionHandler: taskAfterCompletion)
     }
