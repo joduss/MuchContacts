@@ -15,7 +15,7 @@ class ContactsTVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.navigationController?.navigationBarHidden = false
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -84,6 +84,10 @@ class ContactsTVC: UITableViewController {
     }
     
     
+    @IBAction func logoutAction(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+        apiHelper.logout()
+    }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

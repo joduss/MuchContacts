@@ -9,7 +9,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="MuchContacts" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="loginVC" id="BYZ-38-t0r" customClass="ViewController" customModule="MuchContacts" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -128,6 +128,9 @@
                     <navigationItem key="navigationItem" title="Contacts" id="an3-jM-ceM">
                         <barButtonItem key="leftBarButtonItem" systemItem="stop" id="ySh-JL-Vgq">
                             <color key="tintColor" red="0.88821171465968585" green="0.0091198604595395371" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="logoutAction:" destination="QNp-e1-8ho" id="MIR-xl-kND"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -330,7 +333,7 @@
         <!--Navigation Controller-->
         <scene sceneID="M8f-lQ-yJN">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KoK-yn-KDT" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="contactsTVCNavController" automaticallyAdjustsScrollViewInsets="NO" id="KoK-yn-KDT" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8w7-Ay-ClM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -344,7 +347,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dfd-fv-0hg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1116" y="368"/>
+            <point key="canvasLocation" x="1158" y="343"/>
         </scene>
     </scenes>
     <resources>

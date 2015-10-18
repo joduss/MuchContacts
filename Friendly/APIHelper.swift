@@ -35,13 +35,60 @@ class APIHelper: NSObject {
     private let baseUrl = "https://api.mycontacts.io/v2"
     
     
+    
+    
+    private let PASSWORD_SAVE_KEY = "password"
+    private let USERNAME_SAVE_KEY = "username"
+    private let AUTHTOKEN_SAVE_KEY = "authToken"
+    private let TRIGGERTOKEN_SAVE_KEY = "trigger token"
+    private let EXPIRE_SAVE_KEY = "expire"
+    
+    
+    //Init the APIHelper singleton
+    //It check if the user was loggedIn before and check if its
+    //session is still valid
     private override init(){
+        
         loggedIn = false
         super.init()
+        
+        //print(JNKeychain.loadValueForKey(EXPIRE_SAVE_KEY))
+        if let expireDate = JNKeychain.loadValueForKey(EXPIRE_SAVE_KEY) as? Int
+            where CFAbsoluteTimeGetCurrent() < Double(expireDate)
+        {
+            //The token is not expired, the login is still valid
+            
+            guard let authenticationToken = JNKeychain.loadValueForKey(AUTHTOKEN_SAVE_KEY) as? String,
+                triggerToken = JNKeychain.loadValueForKey(TRIGGERTOKEN_SAVE_KEY) as? String,
+                username = JNKeychain.loadValueForKey(USERNAME_SAVE_KEY) as? String else {
+                    //one of these data are not existing.
+                    //usually, or none exist, or all exist
+                    //to ensure there wasn't a bug, we still remove all remaining data in the keychain
+                    self.removeKeychainData() //
+                    return
+            }
+            
+            loggedIn = true
+            self.triggerToken = triggerToken
+            self.username = username
+            self.authToken = authenticationToken
+            self.expire = Int(expireDate)
+            
+        } else {
+            //remove all these, because they are expired. User has to login again
+            removeKeychainData()
+        }
     }
     
     class func helper() -> APIHelper {
         return apiHelper
+    }
+    
+    private func removeKeychainData() {
+        JNKeychain.deleteValueForKey(AUTHTOKEN_SAVE_KEY)
+        JNKeychain.deleteValueForKey(EXPIRE_SAVE_KEY)
+        JNKeychain.deleteValueForKey(USERNAME_SAVE_KEY)
+        JNKeychain.deleteValueForKey(TRIGGERTOKEN_SAVE_KEY)
     }
     
     
@@ -136,14 +183,17 @@ class APIHelper: NSObject {
         let completionTask = {(data : NSData?, response: NSURLResponse?, error: NSError?) in
             
             let statusCode = (response as? NSHTTPURLResponse)!.statusCode
-            printd("data \(NSString(data: data!, encoding: NSUTF8StringEncoding))")
-            
+            //                printd("data \(NSString(data: data!, encoding: NSUTF8StringEncoding))")
             
             
             switch statusCode {
             case 200:
                 if let trigToken = APIJSONProcessing.parseTriggerToken(data) {
                     self.triggerToken = trigToken
+                    JNKeychain.saveValue(self.authToken, forKey: self.AUTHTOKEN_SAVE_KEY)
+                    JNKeychain.saveValue(self.triggerToken, forKey: self.TRIGGERTOKEN_SAVE_KEY)
+                    JNKeychain.saveValue(self.expire, forKey: self.EXPIRE_SAVE_KEY)
+                    JNKeychain.saveValue(self.username, forKey: self.USERNAME_SAVE_KEY)
                     completion?(loggedIn: true, wrongCredentials: false)
                 } else {
                     completion?(loggedIn: false, wrongCredentials: false)
@@ -161,16 +211,14 @@ class APIHelper: NSObject {
             
         }
         
-        
-        guard let authenticationToken = authToken else {
-            completion?(loggedIn: false, wrongCredentials: false)
-            return
+        //Need the authenticationToken, otherwise, cannot get the triggerToken
+        if let authenticationToken = authToken  {
+            request.addValue(authenticationToken, forHTTPHeaderField: APIHelper.TOKEN_AUTHTOKEN_KEY)
+            HTTPComm.getJSON(session: session, request: request, completionHandler: completionTask)
         }
-        
-        request.addValue(authenticationToken, forHTTPHeaderField: APIHelper.TOKEN_AUTHTOKEN_KEY)
-        HTTPComm.getJSON(session: session, request: request, completionHandler: completionTask)
-        
-        
+        else {
+            completion?(loggedIn: false, wrongCredentials: false)
+        }
     }
     
     /** Registers the device*/
@@ -226,20 +274,22 @@ class APIHelper: NSObject {
     func logout(completionHandler: ((success : Bool) -> Void)?=nil) {
         
         guard let token = authToken where loggedIn == true else {
-            //else: nothing important. Should not be an error
+            // if not token, and not loggedIn nothing important. Should not be an error
+            // But this is an inconsistent state for the app
             completionHandler?(success: true)
             return
         }
         
         let requestUrl = NSURL(string: baseUrl + "/logout")
         let request = NSMutableURLRequest(URL: requestUrl!)
-        let session = NSURLSession.sharedSession()
         
         request.addValue(token, forHTTPHeaderField: APIHelper.TOKEN_AUTHTOKEN_KEY)
         
         let taskAfterCompletion = {
             (data : NSData?, response:NSURLResponse?, error:NSError?) -> Void in
             guard let response = response as? NSHTTPURLResponse else {
+                //If the server cannot be reached, the "logout" is failed
+                //But we still accept that situation (certainly not ideal for security
                 printe("Error logout failed , no answer from server")
                 completionHandler?(success: false)
                 return
@@ -254,10 +304,8 @@ class APIHelper: NSObject {
             self.expire = nil
             self.triggerToken = nil
             completionHandler?(success: true)
-            //}
-            
+            self.removeKeychainData()
         }
-        
         HTTPComm.postJSON(session: session, request: request, completionHandler: taskAfterCompletion)
     }
     
@@ -419,7 +467,7 @@ class APIHelper: NSObject {
             completionHandler?(success: false)
         }
     }
-
+    
     
     
 }

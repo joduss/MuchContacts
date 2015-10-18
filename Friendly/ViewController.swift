@@ -12,27 +12,32 @@ import JGProgressHUD
 class ViewController: UIViewController {
     
     let segueIdentifierAfterLogin = "afterLoginSegue"
+    
+    
 
+    
     @IBOutlet weak var usernameTF: UITextField!
     @IBOutlet weak var passwordTF: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view, typically from a nib.
-    }
+        
+        //Check if user is still loggedIn
 
+        
+        
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     @IBAction func loginClicked(sender: UIButton) {
         
-        let progress = JGProgressHUD(style: JGProgressHUDStyle.ExtraLight)
-        progress.textLabel.text = "Loging in"
-        progress.indicatorView = JGProgressHUDIndeterminateIndicatorView.init(HUDStyle: progress.style)
-        
-        
+
         
         guard let username = usernameTF.text,
             pwd = passwordTF.text
@@ -42,16 +47,19 @@ class ViewController: UIViewController {
                 return
         }
         
+        //Show loading to user
+        let progress = JGProgressHUD(style: JGProgressHUDStyle.ExtraLight)
+        progress.textLabel.text = "Loging in"
+        progress.indicatorView = JGProgressHUDIndeterminateIndicatorView.init(HUDStyle: progress.style)
         progress.showInView(self.view, animated: true)
-
-
-
         
         apiHelper.login(username: username,
             password: pwd, completion: {(loggedIn, wrongCredentials) in
                 progress.dismissAnimated(true)
-
+                
                 if(loggedIn) {
+                    
+                    self.passwordTF.text = "" //remove password from the textfield for security reason
                     self.performSegueWithIdentifier(self.segueIdentifierAfterLogin, sender: nil)
                 }
                 else if(wrongCredentials == true ) {
@@ -62,6 +70,8 @@ class ViewController: UIViewController {
                 }
         })
         
+        
+        
     }
     
     func showAlert(title title: String, message: String) {
@@ -69,6 +79,6 @@ class ViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
     }
-
+    
 }
 

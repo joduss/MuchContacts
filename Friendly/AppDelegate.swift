@@ -19,6 +19,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 
         
+        //If user still loggedIn and the session isn't expired, directly show the contactsTVC
+        if(apiHelper.loggedIn) {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc =    storyboard.instantiateViewControllerWithIdentifier("contactsTVCNavController")
+            let root = self.window?.rootViewController
+            self.window?.makeKeyAndVisible()
+            
+            root?.presentViewController(vc, animated: false, completion: nil)
+        }
+        
+        
+        
         
         return true
     }
