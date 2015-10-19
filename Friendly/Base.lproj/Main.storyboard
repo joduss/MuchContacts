@@ -314,29 +314,29 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="84"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&gt;" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nnk-Iy-H2Y">
-                                            <rect key="frame" x="36" y="21" width="19" height="36"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&gt;&gt;" textAlignment="center" lineBreakMode="tailTruncation" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nnk-Iy-H2Y">
+                                            <rect key="frame" x="36" y="25" width="30" height="29"/>
                                             <animations/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="24"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Firstname, last name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Pe-Nm-kAZ">
-                                            <rect key="frame" x="170" y="13" width="142" height="18"/>
+                                            <rect key="frame" x="170" y="14" width="142" height="18"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="254" horizontalCompressionResistancePriority="749" text="laurent.hugo@bluewin.com" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.01" translatesAutoresizingMaskIntoConstraints="NO" id="lGH-dp-OV1">
-                                            <rect key="frame" x="63" y="36" width="249" height="18"/>
+                                            <rect key="frame" x="74" y="37" width="238" height="18"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" red="0.73042784685863871" green="0.032849383033304487" blue="0.10196819536821103" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" text="15.08.2015, 15h20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.0099999997764825821" translatesAutoresizingMaskIntoConstraints="NO" id="pag-ay-Dre">
-                                            <rect key="frame" x="198" y="59" width="114" height="12"/>
+                                            <rect key="frame" x="198" y="60" width="114" height="16"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
                                             <color key="textColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
@@ -358,13 +358,13 @@
                                         <constraint firstAttribute="trailingMargin" secondItem="pag-ay-Dre" secondAttribute="trailing" id="JM5-fT-s9i"/>
                                         <constraint firstItem="jm9-QX-E2M" firstAttribute="centerY" secondItem="tmD-mD-8kc" secondAttribute="centerY" id="KOb-VW-nBy"/>
                                         <constraint firstItem="pag-ay-Dre" firstAttribute="top" secondItem="lGH-dp-OV1" secondAttribute="bottom" constant="5" id="L4P-7f-aWb"/>
-                                        <constraint firstItem="7Pe-Nm-kAZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tmD-mD-8kc" secondAttribute="topMargin" constant="5" id="ZuN-4g-K2H"/>
+                                        <constraint firstItem="7Pe-Nm-kAZ" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tmD-mD-8kc" secondAttribute="topMargin" id="ZuN-4g-K2H"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="lGH-dp-OV1" secondAttribute="trailing" id="aOp-69-pgv"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="pag-ay-Dre" secondAttribute="bottom" constant="5" id="frF-5N-mfB"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="pag-ay-Dre" secondAttribute="bottom" id="frF-5N-mfB"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="7Pe-Nm-kAZ" secondAttribute="trailing" id="h1u-YJ-DP6"/>
                                         <constraint firstItem="lGH-dp-OV1" firstAttribute="leading" secondItem="Nnk-Iy-H2Y" secondAttribute="trailing" constant="8" id="pZY-IB-Frd"/>
                                         <constraint firstAttribute="leadingMargin" secondItem="jm9-QX-E2M" secondAttribute="leading" id="xCR-1n-ZLk"/>
-                                        <constraint firstItem="Nnk-Iy-H2Y" firstAttribute="top" secondItem="jm9-QX-E2M" secondAttribute="top" constant="-11" id="xOU-1f-vrz"/>
+                                        <constraint firstItem="Nnk-Iy-H2Y" firstAttribute="top" secondItem="jm9-QX-E2M" secondAttribute="top" constant="-7" id="xOU-1f-vrz"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <animations/>

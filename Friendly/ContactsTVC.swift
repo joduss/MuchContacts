@@ -30,8 +30,8 @@ class ContactsTVC: UITableViewController {
 
     }
     
+    //Download the data from the server
     func loadData() {
-        
         let hud = JGProgressHUD(style: JGProgressHUDStyle.Dark)
         hud.indicatorView = JGProgressHUDIndeterminateIndicatorView.init(HUDStyle: hud.style)
         hud.showInView(self.navigationController?.view, animated: true)

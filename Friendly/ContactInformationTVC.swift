@@ -7,17 +7,11 @@
 //
 
 import UIKit
+import JGProgressHUD
 
 class ContactInformationTVC: UITableViewController {
     
-    var contact : Contact? {
-        didSet {
-            apiHelper.getAllInteractionWithContact(contact!, completionHandler: {interactions in
-                self.interactions = interactions
-                self.tableView.reloadData()
-            })
-        }
-    }
+    var contact : Contact?
     var allContact = Array<Contact>()
     
     private var interactions = Array<Interaction>()
@@ -25,9 +19,20 @@ class ContactInformationTVC: UITableViewController {
     private var callStartTime = 0.0
     private var numberBeingCalled : String?
     
+    
+    private var hud = JGProgressHUD()
+    
     override func viewDidLoad() {
+        //setup hud style
+        hud = JGProgressHUD(style: JGProgressHUDStyle.Dark)
+        hud.indicatorView = JGProgressHUDIndeterminateIndicatorView.init(HUDStyle: hud.style)
+        
         super.viewDidLoad()
         
+        //show progresshud
+        hud.showInView(self.navigationController?.view, animated: true)
+        self.loadData()
+
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -35,6 +40,14 @@ class ContactInformationTVC: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 50
+    }
+    
+    func loadData() {
+        apiHelper.getAllInteractionWithContact(contact!, completionHandler: {interactions in
+            self.interactions = interactions
+            self.tableView.reloadData()
+            self.hud.dismissAnimated(true)
+        })
     }
     
     override func didReceiveMemoryWarning() {
@@ -188,19 +201,40 @@ class ContactInformationTVC: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        if let c = contact where indexPath.section == 0 {
+        if let c = contact where indexPath.section == 0 && indexPath.row != 0 {
             if(indexPath.row >= 1 && indexPath.row < 1 + c.emails.count) {
                 //is an email
             } else if indexPath.row >= 1 + c.emails.count && indexPath.row <= 1 + c.emails.count + c.phones.count {
-                //this is making a call
-                let phoneNumber = c.phones[indexPath.row - (1 + c.emails.count)].number
-                numberBeingCalled = phoneNumber
-                UIApplication.sharedApplication().openURL(NSURL(string: "tel:\(phoneNumber)")!)
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("callEnded"), name: "CALL", object: nil)
                 
                 
-                callStartTime = Utility.getCurrentTimeInSeconds()
+                //Show 2 options to the user when he clicks on a phone number: send sms or call
+                let actionsheet = UIAlertController(title: "Send sms or call", message: "Choose the desired action", preferredStyle: UIAlertControllerStyle.ActionSheet)
+                actionsheet.addAction(UIAlertAction(title: "Call", style: UIAlertActionStyle.Default, handler: {alertAction in
+                    //this is making a call
+                    let phoneNumber = c.phones[indexPath.row - (1 + c.emails.count)].number
+                    self.numberBeingCalled = phoneNumber
+                    UIApplication.sharedApplication().openURL(NSURL(string: "tel:\(phoneNumber)")!)
+                    NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("callEnded"), name: "CALL", object: nil)
+                    self.callStartTime = Utility.getCurrentTimeInSeconds()
+                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                }))
+                actionsheet.addAction(UIAlertAction(title: "SMS", style: UIAlertActionStyle.Default, handler: {alertAction in
+                    //this is to send an SMS
+                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                    
+    
+
+                }))
+                actionsheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {alertAction in
+                    //cancel
+                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                }))
+                
+                self.presentViewController(actionsheet, animated: true, completion: nil)
             }
+        }
+        else {
+            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
     
@@ -222,13 +256,21 @@ class ContactInformationTVC: UITableViewController {
                     type: InteractionType.CALL,
                     date: Utility.getCurrentTimeInSeconds(),
                     phoneNumber: number, contactID: contactID)
+                //show progresshud
+                hud.showInView(self.navigationController?.view, animated: true)
                 
-                apiHelper.createInteraction(newInteraction, completionHandler: nil)
+                apiHelper.createInteraction(newInteraction, completionHandler: { success in
+                    //TODO: Handle a failure
+                    
+                    //Reload the data to show the new interaction
+                    self.loadData()
+                })
                 
                 numberBeingCalled = nil
         }
         
     }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
