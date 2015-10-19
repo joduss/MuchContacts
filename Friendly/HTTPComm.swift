@@ -8,6 +8,9 @@
 
 import UIKit
 
+
+/**Handle the sending of the request to the server. It setup the header for json
+* and the appropriate http method*/
 class HTTPComm: NSObject {
     
     

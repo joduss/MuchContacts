@@ -13,20 +13,13 @@ class ViewController: UIViewController {
     
     let segueIdentifierAfterLogin = "afterLoginSegue"
     
-    
-
-    
     @IBOutlet weak var usernameTF: UITextField!
     @IBOutlet weak var passwordTF: UITextField!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        //Check if user is still loggedIn
-
-        
-        
+   
     }
     
     
@@ -36,8 +29,6 @@ class ViewController: UIViewController {
     }
     
     @IBAction func loginClicked(sender: UIButton) {
-        
-
         
         guard let username = usernameTF.text,
             pwd = passwordTF.text
@@ -69,11 +60,10 @@ class ViewController: UIViewController {
                     self.showAlert(title: "Error", message: "Another error happened. Most likely due to the network")
                 }
         })
-        
-        
-        
     }
     
+    
+    //Show an alert with the specified title and message
     func showAlert(title title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))

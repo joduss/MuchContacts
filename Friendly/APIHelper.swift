@@ -104,6 +104,7 @@ class APIHelper: NSObject {
     
     // MARK: - Login
     
+    //================================
     /**
     Login
     */
@@ -185,9 +186,10 @@ class APIHelper: NSObject {
     }
     
     
+    //================================
     /* Get the TriggerToken. If the device was not registered, it will be done*/
     private func getTriggerToken(completion:((loggedIn: Bool, wrongCredentials: Bool)  -> Void)?=nil) {
-        let url = NSURL(string: baseUrl + "/triggerDevices?deviceId=1111141-11111-1111-1111")
+        let url = NSURL(string: baseUrl + "/triggerDevices?deviceId=\(Utility.getDeviceIDForUsername(username!))")
         let request = NSMutableURLRequest(URL: url!)
         
         
@@ -229,6 +231,8 @@ class APIHelper: NSObject {
         }
     }
     
+    
+    //================================
     /** Registers the device*/
     func registerDevice(completion:((loggedIn: Bool, wrongCredentials: Bool)  -> Void)?=nil) {
         let url = NSURL(string: baseUrl + "/triggerDevices")
@@ -258,7 +262,7 @@ class APIHelper: NSObject {
         
         //set the body: a new generatedDeviceID and the name of the phone
         //TODO get device name for the name here.
-        let dataParam = ["deviceId" : Utility.generateDeviceID(), "name" : "iphone"]
+        let dataParam = ["deviceId" : Utility.getDeviceIDForUsername(username!), "name" : UIDevice.currentDevice().name]
         
         guard let authenticationToken = authToken else {
             completion?(loggedIn: false, wrongCredentials: false)
@@ -276,6 +280,8 @@ class APIHelper: NSObject {
         
     }
     
+    
+    //================================
     //
     /**
     Logout the user
@@ -322,6 +328,8 @@ class APIHelper: NSObject {
     
     // MARK: - get information
     
+    
+    //================================
     /**
     Load 1000 contacts on the server, starting from the offset'th.
     - parameter offset: What is the first contact to load
@@ -358,11 +366,9 @@ class APIHelper: NSObject {
         HTTPComm.getJSON(session: session, request: request, completionHandler: completionTask)
     }
     
+  
     
-    
-    
-    
-    
+    //================================
     /** Returns all the interfactions that happened between the user and the specified contacts*/
     func getAllInteractionWithContact(contact : Contact, completionHandler:((interactions : [Interaction]) -> Void)) {
         
@@ -402,6 +408,7 @@ class APIHelper: NSObject {
     }
     
     
+    //================================
     /**Test creation of Interaction
     */
     // TODO for call: update the interaction with the duration!

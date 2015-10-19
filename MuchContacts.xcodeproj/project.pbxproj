@@ -206,16 +206,16 @@
 			children = (
 				C8D4F2781BD3EF1700701FC8 /* MuchContacts-Bridging-Header.h */,
 				C896ED041BD2E75B0008BE17 /* Utility.swift */,
+				C8AC43831BD145AF0083146C /* DebugFunctions.swift */,
 				C8AC43821BD141390083146C /* API */,
 				C80A42F81BD2B3B80055A15F /* RepresentationObjects */,
-				C8AC43451BD11CE70083146C /* AppDelegate.swift */,
 				C8D4F2791BD400F700701FC8 /* VC classes */,
 				C8AC43491BD11CE70083146C /* Main.storyboard */,
 				C8AC434F1BD11CE70083146C /* Assets.xcassets */,
 				C8AC43511BD11CE70083146C /* LaunchScreen.storyboard */,
 				C8AC43541BD11CE70083146C /* Info.plist */,
 				C8AC434C1BD11CE70083146C /* Friendly.xcdatamodeld */,
-				C8AC43831BD145AF0083146C /* DebugFunctions.swift */,
+				C8AC43451BD11CE70083146C /* AppDelegate.swift */,
 			);
 			name = MuchContacts;
 			path = Friendly;

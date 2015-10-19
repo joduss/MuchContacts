@@ -21,6 +21,7 @@ class PhoneNumber : NSObject {
     }
 }
 
+
 class EmailAddress : NSObject {
     var address : String
     var type:String
@@ -31,22 +32,11 @@ class EmailAddress : NSObject {
     }
 }
 
-public enum ContactType {
-    case COMPANY
-    case PERSON
+
+public enum ContactType : String {
+    case COMPANY = "COMPANY"
+    case PERSON = "PERSON"
     
-    static func stringToEnum(withString string:String) -> ContactType {
-        if(string == APIJSONProcessing.CONTACT_TYPE_COMPANY){
-            return ContactType.COMPANY
-        }
-        else if(string == APIJSONProcessing.CONTACT_TYPE_PERSON) {
-            return ContactType.PERSON
-        }
-        else {
-            NSException(name: "ENUM VALUE NOT FOUND", reason: "The given enum string \(string) does not correspond to any value of ContactType", userInfo: nil).raise()
-            abort()
-        }
-    }
 }
 
 class Contact: NSObject {
@@ -70,18 +60,18 @@ class Contact: NSObject {
     }
     
     /** Return a name for a contact.
-    * If it's a person, it return the lastname if not null or empty. If it is, returns ""
-    * For company, firstname, lastname are nil, thus, return the companyName
+    * If it's a person, it return the lastname if not null or empty. If both are nil, returns ""
+    * For company, return the company name
     * If company name is nil, return ""
     */
     func getBestNameForSorting() -> String {
-        if(Utility.stringNotNilNotEmpty(lastname)){
+        if(contactType == ContactType.COMPANY && Utility.stringNotNilNotEmpty(companyName)){
+            return companyName!
+        }
+        else if(Utility.stringNotNilNotEmpty(lastname)){
             return lastname!
         } else if( Utility.stringNotNilNotEmpty(firstname)) {
             return firstname!
-        }
-        else if Utility.stringNotNilNotEmpty(companyName) {
-            return companyName!
         }
         else {
             return ""

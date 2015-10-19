@@ -14,17 +14,17 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
     
     var contact : Contact?
     var allContact = Array<Contact>()
-    
     private var interactions = Array<Interaction>()
     
+    private var hud = JGProgressHUD()
+
     private var callStartTime = 0.0
     private var phoneNumberInUse : String?
     
     
-    private var hud = JGProgressHUD()
     
     override func viewDidLoad() {
-        //setup hud style
+        //setup hud and its style
         hud = JGProgressHUD(style: JGProgressHUDStyle.Dark)
         hud.indicatorView = JGProgressHUDIndeterminateIndicatorView.init(HUDStyle: hud.style)
         
@@ -33,9 +33,6 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
         //show progresshud
         hud.showInView(self.navigationController?.view, animated: true)
         self.loadData()
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
@@ -66,7 +63,6 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         
         guard let c = contact else {
             return 0
@@ -100,16 +96,13 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        
         if(indexPath.section == 0){
             return prepareCellForSection0(tableView, forIndexPath: indexPath)
         } else if(indexPath.section == 1){
-            return prepareCellForSection1ForActivity(tableView, forIndexPath: indexPath)
+            return prepareCellForSection1ForInteraction(tableView, forIndexPath: indexPath)
         }
-        let cell = UITableViewCell()
         
-        
-        return cell
+        return UITableViewCell()
     }
     
     
@@ -125,8 +118,7 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
             cell = tableView.dequeueReusableCellWithIdentifier("twoNamesCell", forIndexPath: indexPath)
             let labelFirstname = cell.viewWithTag(1) as! UILabel
             let labelLastname = cell.viewWithTag(2) as! UILabel
-            if(contact?.companyName != nil){
-                //it's a company
+            if(contact?.contactType == ContactType.COMPANY){
                 labelFirstname.text = contact?.companyName
                 labelLastname.text = nil
             } else {
@@ -154,7 +146,8 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
         return cell
     }
     
-    func prepareCellForSection1ForActivity(tv : UITableView, forIndexPath indexPath: NSIndexPath) -> UITableViewCell{
+    /**Setup the cell for an Interaction*/
+    func prepareCellForSection1ForInteraction(tv : UITableView, forIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let interaction = interactions[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier("interactionCell", forIndexPath: indexPath)
         let imageView = cell.viewWithTag(1) as! UIImageView
@@ -189,17 +182,14 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
             formatter.dateStyle = .LongStyle
             
             dateLabel.text = formatter.stringFromDate(date);
-            
         }
         else {
             
         }
-        
-        
         return cell
     }
     
-    
+    /**Find the contact corresponding to the specified contact id*/
     func findContactWithID(contactID : String) -> Contact? {
         for c in allContact {
             if(c.contactID == contactID){
@@ -218,50 +208,63 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
             } else if indexPath.row >= 1 + c.emails.count && indexPath.row <= 1 + c.emails.count + c.phones.count {
                 
                 //number with which an action will be made
-                let phoneNumber = c.phones[indexPath.row - (1 + c.emails.count)].number
-                self.phoneNumberInUse = phoneNumber
-
+                let phoneNumber = c.phones[indexPath.row - (1 + c.emails.count)]
+                self.phoneNumberInUse = phoneNumber.number
                 
-                //Show 2 options to the user when he clicks on a phone number: send sms or call
-                let actionsheet = UIAlertController(title: "Send sms or call", message: "Choose the desired action", preferredStyle: UIAlertControllerStyle.ActionSheet)
-                
-                //setup the call action
-                actionsheet.addAction(UIAlertAction(title: "Call", style: UIAlertActionStyle.Default, handler: {alertAction in
-                    //this is making a call
-                    UIApplication.sharedApplication().openURL(NSURL(string: "tel:\(phoneNumber)")!)
-                    NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("callEnded"), name: "CALL", object: nil)
-                    self.callStartTime = Utility.getCurrentTimeInSeconds()
-                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-                }))
-                
-                //setup the sms action
-                actionsheet.addAction(UIAlertAction(title: "SMS", style: UIAlertActionStyle.Default, handler: {alertAction in
-                    //this is to send an SMS
-                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                if phoneNumber.type.lowercaseString == "mobile"{
+                    //If the phone number is mobile, then 2 actions are possible: call or sms
                     
-                    let smsController = MFMessageComposeViewController()
-                    smsController.recipients = [phoneNumber]
-                    smsController.messageComposeDelegate = self
-                    self.presentViewController(smsController, animated: true, completion: nil)
+                    //Show 2 options to the user when he clicks on a phone number: send sms or call
+                    let actionsheet = UIAlertController(title: "Send sms or call", message: "Choose the desired action", preferredStyle: UIAlertControllerStyle.ActionSheet)
                     
+                    //setup the call action
+                    actionsheet.addAction(UIAlertAction(title: "Call", style: UIAlertActionStyle.Default, handler: {alertAction in
+                        //this is making a call
+                        self.startCalling(phoneNumber)
+                    }))
                     
-                }))
-                
-                //cancel action
-                actionsheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {alertAction in
-                    //cancel
-                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-                }))
-                
-                self.presentViewController(actionsheet, animated: true, completion: nil)
+                    //setup the sms action
+                    actionsheet.addAction(UIAlertAction(title: "SMS", style: UIAlertActionStyle.Default, handler: {alertAction in
+                        //this is to send an SMS
+                        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                        
+                        let smsController = MFMessageComposeViewController()
+                        smsController.recipients = [phoneNumber.number]
+                        smsController.messageComposeDelegate = self
+                        self.presentViewController(smsController, animated: true, completion: nil)
+                    }))
+                    
+                    //cancel action
+                    actionsheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {alertAction in
+                        //cancel
+                    }))
+                    
+                    self.presentViewController(actionsheet, animated: true, completion: nil)
+                }
+                else {
+                    //if it is not a mobile number, then only a call is possible
+                    startCalling(phoneNumber)
+                }
             }
         }
-        else {
-            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        }
+
+        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+
     }
     
+    //Initiate a phone call to the specified number
+    func startCalling(phoneNumber : PhoneNumber) {
+        UIApplication.sharedApplication().openURL(NSURL(string: "tel:\(phoneNumber.number)")!)
+        
+        //Ask to be notified when the call will be ended.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("callEnded"), name: "CALL", object: nil)
+        self.callStartTime = Utility.getCurrentTimeInSeconds()
+    }
+    
+    
+    /** The call has ended*/
     func callEnded() {
+        //Now that the call ended, we need to save the interaction
         
         if let contactID = contact?.contactID,
             number = phoneNumberInUse {
@@ -271,10 +274,9 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
                 let minutes = Int(duration / Double(60))
                 let seconds = Int(duration - Double(minutes)*60.0)
                 
-                print("duration: \(minutes):\(seconds)")
+                //unregister to the notif center. The call has been made
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: "CALL", object: nil)
-                
-                
+
                 let newInteraction = Interaction(interactionDirection: InteractionDirection.OUTBOUND,
                     type: InteractionType.CALL,
                     date: Utility.getCurrentTimeInSeconds(),
@@ -297,7 +299,7 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
     
     //MARK: - MFMessageDelegate
     
-    //
+    //handle the action of the user when he send/cancel the sms
     func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
         controller.dismissViewControllerAnimated(true, completion: nil)
 

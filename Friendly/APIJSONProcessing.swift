@@ -8,9 +8,10 @@
 
 import UIKit
 
+/**Provides parsing functions the json objects that are received*/
 class APIJSONProcessing: NSObject {
     
-    
+    //keys used in the json dictionary
     static let FIRSTNAME_JSON = "firstName"
     static let LASTNAME_JSON = "lastName"
     static let PHONENUMBERS_JSON = "phoneNumbers"
@@ -39,7 +40,11 @@ class APIJSONProcessing: NSObject {
     static let TRIGGER_TOKEN_KEY = "triggerToken"
     static let TRIGGER_TOKEN_ENTITY_KEY = "entity"
     
+    //set some properties
+    static let MAX_EMAIL_ADDRESSES_DOWNLOAD = 2
     
+    
+    //================================
     //Read the json returned at the login and returns the AuthToken
     class func loginJSONProcessing(jsonRawData : NSData) -> (String, Int)? {
         
@@ -56,26 +61,34 @@ class APIJSONProcessing: NSObject {
         return nil
     }
     
+    //================================
     /** Create a Contact object from the information specified in the dictionary*/
     class func parseContactFromJSONDictionary(jsonDico : Dictionary<String, AnyObject>) -> Contact?{
         let newContact = Contact()
         
-        guard let contactType = jsonDico[CONTACT_TYPE_KEY] as? String else {
-            //cannot know the contact type. Error in the data!
-            return nil
+        guard let ct = jsonDico[CONTACT_TYPE_KEY] as? String,
+            contactType = ContactType(rawValue:ct) else {
+                //cannot know the contact type. Error in the data!
+                return nil
         }
+        
         newContact.firstname = jsonDico[FIRSTNAME_JSON] as? String
         newContact.lastname = jsonDico[LASTNAME_JSON] as? String
-        newContact.contactType = ContactType.stringToEnum(withString: contactType)
+        newContact.contactType = contactType
         newContact.companyName = jsonDico[COMPANY_NAME_KEY] as? String
         newContact.contactID = (jsonDico[ID_KEY] as! String)
         
         if let emailsRecords = (jsonDico[EMAIL_JSON] as? Array<Dictionary<String, String>>) {
-            for record in emailsRecords {
+            
+            var i = 0
+            while(i < MAX_EMAIL_ADDRESSES_DOWNLOAD && i < emailsRecords.count){
+                let record = emailsRecords[i]
                 if let address = record[EMAIL_RECORD_EMAIL_ADDRESS], type = record[EMAIL_RECORD_EMAIL_TYPE]
                 {
+                    let emailAddress =
                     newContact.emails.append(EmailAddress(address: address, type: type))
                 }
+                i++
             }
         }
         if let phoneNumbersRecords = (jsonDico[PHONENUMBERS_JSON] as? Array<Dictionary<String, String>>) {
@@ -106,6 +119,7 @@ class APIJSONProcessing: NSObject {
     }
     
     
+    //================================
     /** Create contacts objects with the data specified in the json array*/
     class func parseMultipleContactsFromJSONContactArray(jsonArray : Array<Dictionary<String, AnyObject>>) -> [Contact]{
         var newContacts = Array<Contact>()
@@ -126,6 +140,7 @@ class APIJSONProcessing: NSObject {
     }
     
     
+    //================================
     /**Parse the datat received after doing a request to get all the contacts */
     class func parseResponseGetAllContact(data : NSData) -> [Contact]? {
         do {
@@ -146,7 +161,7 @@ class APIJSONProcessing: NSObject {
     
     
     
-    
+    //================================
     /**
     Parse a JSON describing one interaction into a Interaction object
     */
@@ -216,27 +231,30 @@ class APIJSONProcessing: NSObject {
     }
     
     
-//    /**
-//    Part a json containing many interactions into an array of Interaction objects
-//    */
-//    class func parseJSONArrayOfInteractions(jsonArray : Array<Dictionary<String, AnyObject>>) -> [Interaction] {
-//        
-//        
-//        var interactions = Array<Interaction>()
-//        for dic in jsonArray {
-//            if let interaction = parseJSONInteractionToInteractionObject(dic) {
-//                interactions.append(interaction)
-//            }
-//        }
-//        return interactions
-//    }
+    //================================
+    //    /**
+    //    Part a json containing many interactions into an array of Interaction objects
+    //    */
+    //    class func parseJSONArrayOfInteractions(jsonArray : Array<Dictionary<String, AnyObject>>) -> [Interaction] {
+    //
+    //
+    //        var interactions = Array<Interaction>()
+    //        for dic in jsonArray {
+    //            if let interaction = parseJSONInteractionToInteractionObject(dic) {
+    //                interactions.append(interaction)
+    //            }
+    //        }
+    //        return interactions
+    //    }
     
     
+    //================================
+    /*Parse the response that is received when requesting the list of interaction with a contact */
     class func parseResponseGetInteractionWithContact(data : NSData) -> [Interaction]? {
         do {
             if let interactionData = try NSJSONSerialization.JSONObjectWithData(data,
                 options: NSJSONReadingOptions.AllowFragments)["data"] as? Array<Dictionary<String, AnyObject>> {
-                
+                    
                     var interactions = Array<Interaction>()
                     for dic in interactionData {
                         if let interaction = parseJSONInteractionToInteractionObject(dic) {
@@ -257,7 +275,8 @@ class APIJSONProcessing: NSObject {
     }
     
     
-    
+    //================================
+    /**Parse the response when requesting a trigger token*/
     class func parseTriggerToken(jsonRawData : NSData?) -> String? {
         guard let data = jsonRawData else {
             return nil
@@ -278,4 +297,8 @@ class APIJSONProcessing: NSObject {
             return nil
         }
     }
+    
+    
+    
+    
 }
