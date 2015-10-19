@@ -13,6 +13,7 @@
 		C80A42F41BD2AA400055A15F /* JGProgressHUD.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C80A42F21BD2AA370055A15F /* JGProgressHUD.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C80A42FB1BD2B9B20055A15F /* ContactsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */; settings = {ASSET_TAGS = (); }; };
 		C815E2F91BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json in Resources */ = {isa = PBXBuildFile; fileRef = C815E2F81BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json */; settings = {ASSET_TAGS = (); }; };
+		C82216A71BD5279D00B5BD92 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82216A61BD5279D00B5BD92 /* MessageUI.framework */; };
 		C896ED051BD2E75B0008BE17 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = C896ED041BD2E75B0008BE17 /* Utility.swift */; settings = {ASSET_TAGS = (); }; };
 		C8AC43461BD11CE70083146C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43451BD11CE70083146C /* AppDelegate.swift */; };
 		C8AC43481BD11CE70083146C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43471BD11CE70083146C /* ViewController.swift */; };
@@ -99,6 +100,7 @@
 		C80A42E71BD2AA370055A15F /* JGProgressHUD.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JGProgressHUD.xcodeproj; path = JGProgressHUD/JGProgressHUD.xcodeproj; sourceTree = "<group>"; };
 		C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsTVC.swift; sourceTree = "<group>"; };
 		C815E2F81BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = jsonCorruptedManyContactTest.json; sourceTree = "<group>"; };
+		C82216A61BD5279D00B5BD92 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		C896ED041BD2E75B0008BE17 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		C8AC43421BD11CE70083146C /* MuchContacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MuchContacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8AC43451BD11CE70083146C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C82216A71BD5279D00B5BD92 /* MessageUI.framework in Frameworks */,
 				C8D4F26C1BD394DB00701FC8 /* Security.framework in Frameworks */,
 				C80A42F31BD2AA400055A15F /* JGProgressHUD.framework in Frameworks */,
 			);
@@ -177,6 +180,7 @@
 		C8AC43391BD11CE70083146C = {
 			isa = PBXGroup;
 			children = (
+				C82216A61BD5279D00B5BD92 /* MessageUI.framework */,
 				C8D4F2771BD3EED000701FC8 /* JNKeychain */,
 				C8D4F26B1BD394DB00701FC8 /* Security.framework */,
 				C80A42E71BD2AA370055A15F /* JGProgressHUD.xcodeproj */,

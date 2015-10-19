@@ -342,7 +342,7 @@
                                             <color key="textColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="at" translatesAutoresizingMaskIntoConstraints="NO" id="jm9-QX-E2M">
+                                        <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="at" translatesAutoresizingMaskIntoConstraints="NO" id="jm9-QX-E2M">
                                             <rect key="frame" x="8" y="32" width="20" height="20"/>
                                             <animations/>
                                             <constraints>

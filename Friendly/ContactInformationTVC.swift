@@ -8,8 +8,9 @@
 
 import UIKit
 import JGProgressHUD
+import MessageUI
 
-class ContactInformationTVC: UITableViewController {
+class ContactInformationTVC: UITableViewController, MFMessageComposeViewControllerDelegate {
     
     var contact : Contact?
     var allContact = Array<Contact>()
@@ -17,7 +18,7 @@ class ContactInformationTVC: UITableViewController {
     private var interactions = Array<Interaction>()
     
     private var callStartTime = 0.0
-    private var numberBeingCalled : String?
+    private var phoneNumberInUse : String?
     
     
     private var hud = JGProgressHUD()
@@ -32,7 +33,7 @@ class ContactInformationTVC: UITableViewController {
         //show progresshud
         hud.showInView(self.navigationController?.view, animated: true)
         self.loadData()
-
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -112,7 +113,7 @@ class ContactInformationTVC: UITableViewController {
     }
     
     
-    /**Prepare a cell for the section 1*/
+    /**Prepare a cell for the section 0*/
     func prepareCellForSection0(tv : UITableView, forIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         //init a default cell
         var cell = UITableViewCell()
@@ -124,8 +125,14 @@ class ContactInformationTVC: UITableViewController {
             cell = tableView.dequeueReusableCellWithIdentifier("twoNamesCell", forIndexPath: indexPath)
             let labelFirstname = cell.viewWithTag(1) as! UILabel
             let labelLastname = cell.viewWithTag(2) as! UILabel
-            labelFirstname.text = contact?.firstname
-            labelLastname.text = contact?.lastname
+            if(contact?.companyName != nil){
+                //it's a company
+                labelFirstname.text = contact?.companyName
+                labelLastname.text = nil
+            } else {
+                labelFirstname.text = contact?.firstname
+                labelLastname.text = contact?.lastname
+            }
         }
         else if(indexPath.row >= 1 && indexPath.row < 1 + c.emails.count) {
             cell = tableView.dequeueReusableCellWithIdentifier("emailCell", forIndexPath: indexPath)
@@ -177,7 +184,11 @@ class ContactInformationTVC: UITableViewController {
             
             //format the date:
             let date = NSDate(timeIntervalSince1970: NSTimeInterval(interaction.date / 1000)) //Should be seconds. So convert ms to s.
-            dateLabel.text = date.description;
+            let formatter = NSDateFormatter()
+            formatter.timeStyle = .ShortStyle
+            formatter.dateStyle = .LongStyle
+            
+            dateLabel.text = formatter.stringFromDate(date);
             
         }
         else {
@@ -206,25 +217,37 @@ class ContactInformationTVC: UITableViewController {
                 //is an email
             } else if indexPath.row >= 1 + c.emails.count && indexPath.row <= 1 + c.emails.count + c.phones.count {
                 
+                //number with which an action will be made
+                let phoneNumber = c.phones[indexPath.row - (1 + c.emails.count)].number
+                self.phoneNumberInUse = phoneNumber
+
                 
                 //Show 2 options to the user when he clicks on a phone number: send sms or call
                 let actionsheet = UIAlertController(title: "Send sms or call", message: "Choose the desired action", preferredStyle: UIAlertControllerStyle.ActionSheet)
+                
+                //setup the call action
                 actionsheet.addAction(UIAlertAction(title: "Call", style: UIAlertActionStyle.Default, handler: {alertAction in
                     //this is making a call
-                    let phoneNumber = c.phones[indexPath.row - (1 + c.emails.count)].number
-                    self.numberBeingCalled = phoneNumber
                     UIApplication.sharedApplication().openURL(NSURL(string: "tel:\(phoneNumber)")!)
                     NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("callEnded"), name: "CALL", object: nil)
                     self.callStartTime = Utility.getCurrentTimeInSeconds()
                     self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
                 }))
+                
+                //setup the sms action
                 actionsheet.addAction(UIAlertAction(title: "SMS", style: UIAlertActionStyle.Default, handler: {alertAction in
                     //this is to send an SMS
                     self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
                     
-    
-
+                    let smsController = MFMessageComposeViewController()
+                    smsController.recipients = [phoneNumber]
+                    smsController.messageComposeDelegate = self
+                    self.presentViewController(smsController, animated: true, completion: nil)
+                    
+                    
                 }))
+                
+                //cancel action
                 actionsheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: {alertAction in
                     //cancel
                     self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
@@ -241,7 +264,7 @@ class ContactInformationTVC: UITableViewController {
     func callEnded() {
         
         if let contactID = contact?.contactID,
-            number = numberBeingCalled {
+            number = phoneNumberInUse {
                 let callStopTime = Utility.getCurrentTimeInSeconds()
                 let duration = callStopTime - callStartTime
                 
@@ -266,10 +289,42 @@ class ContactInformationTVC: UITableViewController {
                     self.loadData()
                 })
                 
-                numberBeingCalled = nil
+                phoneNumberInUse = nil
         }
-        
     }
+    
+    
+    
+    //MARK: - MFMessageDelegate
+    
+    //
+    func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
+
+        if(result == MessageComposeResultSent){
+            //The user just sent the sms. This interaction will be added
+            
+            if let contactID = contact?.contactID,
+                number = phoneNumberInUse {
+                    
+                    let newInteraction = Interaction(interactionDirection: InteractionDirection.OUTBOUND,
+                        type: InteractionType.SMS,
+                        date: Utility.getCurrentTimeInSeconds(),
+                        phoneNumber: number, contactID: contactID)
+                    
+                    //show progresshud
+                    hud.showInView(self.navigationController?.view, animated: true)
+                    
+                    apiHelper.createInteraction(newInteraction, completionHandler: { success in
+                        //TODO: Handle a failure
+                        
+                        //Reload the data to show the new interaction
+                        self.loadData()
+                    })
+            }
+        }
+    }
+    
     
     /*
     // Override to support conditional editing of the table view.
