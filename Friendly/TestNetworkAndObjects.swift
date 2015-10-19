@@ -59,30 +59,34 @@ class TestNetworkAndObjects: XCTestCase {
         
         let jsonContactData = NSData(contentsOfFile: p!)
         
-        do {
-            let jsonObject = try NSJSONSerialization.JSONObjectWithData(jsonContactData!, options: NSJSONReadingOptions.AllowFragments) as! Array<Dictionary<String, AnyObject>>
-            let contacts = APIJSONProcessing.parseMultipleContactsFromJSONContactArray(jsonObject)
-            XCTAssertEqual(4, contacts.count)
-            XCTAssertEqual(contacts[0].lastname, "AAA")
-            XCTAssertEqual(contacts[1].lastname, "Bob")
-            
-            XCTAssertEqual(contacts.last?.lastname, "Zoro")
-            XCTAssertEqual(contacts.last?.phones.count, 2)
-            XCTAssertEqual(contacts.last?.phones[1].type, "mobile")
-            XCTAssertEqual(contacts.last?.phones[0].type, "mobile")
-            XCTAssertEqual(contacts.last?.phones[0].type, "mobile")
-            
-            XCTAssertEqual(contacts[0].phones[0].type, "mobile")
-            XCTAssertEqual(contacts[0].phones[1].type, "work")
-            
-            XCTAssertEqual(contacts.last?.phones[0].type, "mobile")
-            XCTAssertEqual(contacts.last?.phones[1].type, "mobile")
-            
-            XCTAssert(contacts.last?.emails[0].address == "jo@k.com" || contacts.last?.emails[1].address == "jo@k.com")
-        }
-        catch _ {
-            XCTAssert(false, "error with json because of TEST")
-        }
+        let contacts = APIJSONProcessing.parseResponseGetAllContact(jsonContactData!) as Array<Contact>!
+        
+        XCTAssertEqual(4, contacts.count)
+        XCTAssertEqual(contacts[0].lastname, "AAA")
+        XCTAssertEqual(contacts[1].lastname, "Bob")
+        
+        XCTAssertEqual(contacts.last?.lastname, "Zoro")
+        XCTAssertEqual(contacts.last?.phones.count, 2)
+        XCTAssertEqual(contacts.last?.phones[1].type, "mobile")
+        XCTAssertEqual(contacts.last?.phones[0].type, "mobile")
+        XCTAssertEqual(contacts.last?.phones[0].type, "mobile")
+        
+        XCTAssertEqual(contacts[0].phones[0].type, "mobile")
+        XCTAssertEqual(contacts[0].phones[1].type, "work")
+        
+        XCTAssertEqual(contacts.last?.phones[0].type, "mobile")
+        XCTAssertEqual(contacts.last?.phones[1].type, "mobile")
+        
+        XCTAssert(contacts.last?.emails[0].address == "jo@k.com" || contacts.last?.emails[1].address == "jo@k.com")
+    }
+    
+    /** One dictionary for a contact is corrupted*/
+    func testManyContactsFromCorruptedJSON() {
+        let p = NSBundle(forClass:object_getClass(self)).pathForResource("jsonCorruptedManyContactTest", ofType: "json")
+        let jsonContactData = NSData(contentsOfFile: p!)
+        let contacts = APIJSONProcessing.parseResponseGetAllContact(jsonContactData!)
+        XCTAssertEqual(nil, contacts?.count)
+        
     }
     
     
@@ -174,13 +178,11 @@ class TestNetworkAndObjects: XCTestCase {
             //Now get the contacts to find the ID for Jonathan Bluewin
             apiHelper.getAllContacts(0, completionHandler: {(contacts) in
                 var testContactFound = false
-                var contactID = ""
-                var desiredContact = Contact()
+                 var desiredContact = Contact()
                 for contact in contacts {
                     print("contact: \(contact.firstname), \(contact.lastname)")
                     if(contact.firstname == "Test" && contact.lastname == "Interaction"){
                         testContactFound = true
-                        contactID = contact.contactID!
                         desiredContact = contact
                     }
                 }
@@ -201,10 +203,10 @@ class TestNetworkAndObjects: XCTestCase {
                     for inter in interactions {
                         if(inter.phoneNumber == "+41705005050") {
                             numberFound = true
-                        XCTAssertEqual(inter.type, InteractionType.CALL)
-                        XCTAssertEqual(inter.direction,InteractionDirection.OUTBOUND)
+                            XCTAssertEqual(inter.type, InteractionType.CALL)
+                            XCTAssertEqual(inter.direction,InteractionDirection.OUTBOUND)
                         }
-
+                        
                     }
                     XCTAssert(numberFound)
                     
@@ -263,20 +265,20 @@ class TestNetworkAndObjects: XCTestCase {
                 apiHelper.createInteraction(newInteraction, completionHandler:{success in
                     XCTAssert(success)
                     expectation.fulfill()
+                })
+                
             })
             
         })
-        
-    })
-    waitForExpectationsWithTimeout(20, handler: nil)
-}
-
-
-func testPerformanceExample() {
-    // This is an example of a performance test case.
-    self.measureBlock {
-        // Put the code you want to measure the time of here.
+        waitForExpectationsWithTimeout(20, handler: nil)
     }
-}
-
+    
+    
+    func testPerformanceExample() {
+        // This is an example of a performance test case.
+        self.measureBlock {
+            // Put the code you want to measure the time of here.
+        }
+    }
+    
 }

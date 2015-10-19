@@ -21,6 +21,8 @@ class ContactInformationTVC: UITableViewController {
     var allContact = Array<Contact>()
     
     private var interactions = Array<Interaction>()
+    
+    private var callStartTime = 0.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +72,14 @@ class ContactInformationTVC: UITableViewController {
             return interactions.count
         }
         return 0
+    }
+    
+    
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if(section == 1) {
+            return "Past interactions"
+        }
+        return nil
     }
 
     
@@ -172,6 +182,35 @@ class ContactInformationTVC: UITableViewController {
             }
         }
         return nil
+    }
+    
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if let c = contact where indexPath.section == 0 {
+            if(indexPath.row >= 1 && indexPath.row < 1 + c.emails.count) {
+                //is an email
+            } else if indexPath.row >= 1 + c.emails.count && indexPath.row <= 1 + c.emails.count + c.phones.count {
+                //this is making a call
+                UIApplication.sharedApplication().openURL(NSURL(string: "tel:\(c.phones[indexPath.row - (1 + c.emails.count)].number)")!)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("callEnded"), name: "CALL", object: nil)
+                
+                
+                callStartTime = Utility.getCurrentTimeMilis()
+            }
+        }
+    }
+    
+    func callEnded() {
+        let callStopTime = Utility.getCurrentTimeMilis()
+        let duration = callStopTime - callStartTime
+    
+        let minutes = Int(duration / Double(1000 * 60))
+        let seconds = duration / 1000.0 - Double(minutes)*60.0
+        
+        print("duration: \(minutes):\(seconds)")
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: "CALL", object: nil)
+
     }
     /*
     // Override to support conditional editing of the table view.

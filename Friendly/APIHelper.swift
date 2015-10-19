@@ -52,9 +52,12 @@ class APIHelper: NSObject {
         loggedIn = false
         super.init()
         
-        //print(JNKeychain.loadValueForKey(EXPIRE_SAVE_KEY))
+       print("expire: \(JNKeychain.loadValueForKey(EXPIRE_SAVE_KEY)), ")
+        print("current: \(Utility.getCurrentTimeMilis())")
+
+
         if let expireDate = JNKeychain.loadValueForKey(EXPIRE_SAVE_KEY) as? Int
-            where CFAbsoluteTimeGetCurrent() < Double(expireDate)
+            where Utility.getCurrentTimeMilis() < Double(expireDate)
         {
             //The token is not expired, the login is still valid
             
@@ -91,6 +94,15 @@ class APIHelper: NSObject {
         JNKeychain.deleteValueForKey(TRIGGERTOKEN_SAVE_KEY)
     }
     
+    private func saveKeychainData() {
+        JNKeychain.saveValue(self.authToken, forKey: self.AUTHTOKEN_SAVE_KEY)
+        JNKeychain.saveValue(self.triggerToken, forKey: self.TRIGGERTOKEN_SAVE_KEY)
+        JNKeychain.saveValue(self.expire, forKey: self.EXPIRE_SAVE_KEY)
+        JNKeychain.saveValue(self.username, forKey: self.USERNAME_SAVE_KEY)
+        print(JNKeychain.loadValueForKey(EXPIRE_SAVE_KEY))
+    }
+    
+    // MARK: - Login
     
     /**
     Login
@@ -160,9 +172,8 @@ class APIHelper: NSObject {
             }
             catch _ {
                 // TODO: handle that case
-                printe("FAIL TO SEND TO SERVER: cannot jsonieze the parameters")
+                printe("FAIL TO SEND TO SERVER: cannot jsonize the parameters")
                 completion?(loggedIn: false, wrongCredentials: false)
-                
             }
         }
         else {
@@ -190,10 +201,7 @@ class APIHelper: NSObject {
             case 200:
                 if let trigToken = APIJSONProcessing.parseTriggerToken(data) {
                     self.triggerToken = trigToken
-                    JNKeychain.saveValue(self.authToken, forKey: self.AUTHTOKEN_SAVE_KEY)
-                    JNKeychain.saveValue(self.triggerToken, forKey: self.TRIGGERTOKEN_SAVE_KEY)
-                    JNKeychain.saveValue(self.expire, forKey: self.EXPIRE_SAVE_KEY)
-                    JNKeychain.saveValue(self.username, forKey: self.USERNAME_SAVE_KEY)
+                    self.saveKeychainData()
                     completion?(loggedIn: true, wrongCredentials: false)
                 } else {
                     completion?(loggedIn: false, wrongCredentials: false)
@@ -234,6 +242,7 @@ class APIHelper: NSObject {
             case 201:
                 if let trigToken = APIJSONProcessing.parseTriggerToken(data) {
                     self.triggerToken = trigToken
+                    self.saveKeychainData()
                     completion?(loggedIn: true, wrongCredentials: false)
                 } else {
                     completion?(loggedIn: false, wrongCredentials: false)
@@ -247,14 +256,9 @@ class APIHelper: NSObject {
             }
         }
         
-        //generate unique ID:
-        let part1 = arc4random_uniform(100000)
-        let part2 = arc4random_uniform(100000)
-        let part3 = arc4random_uniform(100000)
-
-        
-        //set the body:
-        let dataParam = ["deviceId" : "\(part1)-\(part2)-\(part3)", "name" : "iphone2"]
+        //set the body: a new generatedDeviceID and the name of the phone
+        //TODO get device name for the name here.
+        let dataParam = ["deviceId" : Utility.generateDeviceID(), "name" : "iphone"]
         
         guard let authenticationToken = authToken else {
             completion?(loggedIn: false, wrongCredentials: false)
@@ -272,7 +276,7 @@ class APIHelper: NSObject {
         
     }
     
-    
+    //
     /**
     Logout the user
     */
@@ -284,11 +288,6 @@ class APIHelper: NSObject {
             completionHandler?(success: true)
             return
         }
-        
-        let requestUrl = NSURL(string: baseUrl + "/logout")
-        let request = NSMutableURLRequest(URL: requestUrl!)
-        
-        request.addValue(token, forHTTPHeaderField: APIHelper.TOKEN_AUTHTOKEN_KEY)
         
         let taskAfterCompletion = {
             (data : NSData?, response:NSURLResponse?, error:NSError?) -> Void in
@@ -311,22 +310,25 @@ class APIHelper: NSObject {
             self.triggerToken = nil
             completionHandler?(success: true)
         }
+        
+        //prepare the request
+        let requestUrl = NSURL(string: baseUrl + "/logout")
+        let request = NSMutableURLRequest(URL: requestUrl!)
+        request.addValue(token, forHTTPHeaderField: APIHelper.TOKEN_AUTHTOKEN_KEY)
         HTTPComm.postJSON(session: session, request: request, completionHandler: taskAfterCompletion)
     }
     
     
     
-    
+    // MARK: - get information
     
     /**
-    Load 50 contacts on the server, starting from the offset'th.
+    Load 1000 contacts on the server, starting from the offset'th.
     - parameter offset: What is the first contact to load
     - returns: An array with the downloaded contacts */
     func getAllContacts(offset:Int, completionHandler:((contacts : [Contact]) -> Void)){
         
         print("PREPARE SEND REQUEST for contact\n")
-        let url = NSURL(string: baseUrl + "/contacts?&offset=\(offset)&limit=1000")
-        let request = NSMutableURLRequest(URL: url!)
         
         //Test that the user is loggedIn and the token is not nil
         guard let authToken = authToken where loggedIn == true else {
@@ -335,29 +337,23 @@ class APIHelper: NSObject {
             return
         }
         
-        
         let completionTask = { (data : NSData?, response : NSURLResponse?, error : NSError?) -> Void in
             print("RESPONSE CONTACT \(response))")
-            do {
-                if let contactsData = try NSJSONSerialization.JSONObjectWithData(data!,
-                    options: NSJSONReadingOptions.AllowFragments)["data"] as? Array<Dictionary<String, AnyObject>> {
-                        
-                        let contactsLoaded = APIJSONProcessing.parseMultipleContactsFromJSONContactArray(contactsData)
-                        completionHandler(contacts: contactsLoaded)
-                        // TODO adapt to get all contact
-                }
-                else {
-                    printe("Error with the data")
-                    completionHandler(contacts: Array<Contact>())
-                }
+            if let jsonData = data,
+                contactsLoaded = APIJSONProcessing.parseResponseGetAllContact(jsonData)
+            {
+                completionHandler(contacts: contactsLoaded)
+                // TODO adapt to get all contact
             }
-            catch _ {
-                //cannot load, send empty array or contacts
-                // TODO: notify user
+            else {
+                printe("Error with the data")
+                //TODO notify that there was an error
                 completionHandler(contacts: Array<Contact>())
             }
         }
         
+        let url = NSURL(string: baseUrl + "/contacts?&offset=\(offset)&limit=1000")
+        let request = NSMutableURLRequest(URL: url!)
         request.addValue(authToken, forHTTPHeaderField: APIHelper.TOKEN_AUTHTOKEN_KEY)
         HTTPComm.getJSON(session: session, request: request, completionHandler: completionTask)
     }
@@ -370,7 +366,7 @@ class APIHelper: NSObject {
     /** Returns all the interfactions that happened between the user and the specified contacts*/
     func getAllInteractionWithContact(contact : Contact, completionHandler:((interactions : [Interaction]) -> Void)) {
         
-        print("PREPARE SEND REQUEST for INTERACTION with : \(contact.firstname) \(contact.lastname)\n")
+        printd("PREPARE SEND REQUEST for INTERACTION with : \(contact.firstname) \(contact.lastname)\n")
         
         //the contact should have an id
         guard let contactID = contact.contactID else {
@@ -379,7 +375,7 @@ class APIHelper: NSObject {
             return
         }
         
-        //If the token is missing
+        //If the token is missing, abord
         guard let authToken = authToken else {
             //Not logged in
             completionHandler(interactions: Array<Interaction>())
@@ -391,23 +387,12 @@ class APIHelper: NSObject {
         
         let completionTask = { (data : NSData?, response : NSURLResponse?, error : NSError?) -> Void in
             print("RESPONSE INTERACTION \(response))")
-            do {
-                if let interactionData = try NSJSONSerialization.JSONObjectWithData(data!,
-                    options: NSJSONReadingOptions.AllowFragments)["data"] as? Array<Dictionary<String, AnyObject>> {
-                        //print("data: \(interactionData)")
-                        
-                        let interactionLoaded = APIJSONProcessing.parseJSONArrayOfInteractions(interactionData)
-                        completionHandler(interactions: interactionLoaded)
-                        // TODO adapt to get all contact
-                }
-                else {
-                    printe("Error with the data")
-                    completionHandler(interactions: Array<Interaction>())
-                }
+            if let data = data,
+                interactions = APIJSONProcessing.parseResponseGetInteractionWithContact(data) {
+                    completionHandler(interactions: interactions)
             }
-            catch _ {
-                //cannot load, send empty array or interaction
-                // TODO: notify user
+            else {
+                printe("Error with the data")
                 completionHandler(interactions: Array<Interaction>())
             }
         }
@@ -417,9 +402,8 @@ class APIHelper: NSObject {
     }
     
     
-    
-    
-    //Test creation of Interaction
+    /**Test creation of Interaction
+    */
     // TODO for call: update the interaction with the duration!
     func createInteraction(interaction : Interaction, completionHandler:((success : Bool) -> Void)?) {
         printd("Will be adding interaction")
@@ -434,7 +418,6 @@ class APIHelper: NSObject {
         
         
         // TODO HANDLE ERROR 401, 403, 409
-        
         let completionTask = { (data : NSData?, response : NSURLResponse?, error : NSError?) -> Void in
             print("Response for adding interaction \(response))")
             let statusCode = (response as! NSHTTPURLResponse).statusCode
@@ -464,7 +447,6 @@ class APIHelper: NSObject {
         do {
             request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(dataParam, options: NSJSONWritingOptions.PrettyPrinted)
             request.addValue(token, forHTTPHeaderField: APIHelper.TRIGGEN_TOKEN_KEY)
-            
             
             HTTPComm.postJSON(session: session, request: request, completionHandler: completionTask)
         }

@@ -56,7 +56,7 @@ class APIJSONProcessing: NSObject {
         return nil
     }
     
-    //Create a contact from JSON Dictionary representing the contact
+    /** Create a Contact object from the information specified in the dictionary*/
     class func parseContactFromJSONDictionary(jsonDico : Dictionary<String, AnyObject>) -> Contact?{
         let newContact = Contact()
         
@@ -101,15 +101,12 @@ class APIJSONProcessing: NSObject {
                     }
                 }
             }
-            
         }
         return newContact
     }
     
     
-    
-    
-    //Create a contacts with the data specified in the json
+    /** Create contacts objects with the data specified in the json array*/
     class func parseMultipleContactsFromJSONContactArray(jsonArray : Array<Dictionary<String, AnyObject>>) -> [Contact]{
         var newContacts = Array<Contact>()
         for dic in jsonArray {
@@ -128,11 +125,30 @@ class APIJSONProcessing: NSObject {
         return newContacts
     }
     
-
-
+    
+    /**Parse the datat received after doing a request to get all the contacts */
+    class func parseResponseGetAllContact(data : NSData) -> [Contact]? {
+        do {
+            if let rawContactArray = try NSJSONSerialization.JSONObjectWithData(data,
+                options: NSJSONReadingOptions.AllowFragments)["data"] as? Array<Dictionary<String, AnyObject>> {
+                    return APIJSONProcessing.parseMultipleContactsFromJSONContactArray(rawContactArray)
+            }
+            else {
+                printe("Error with the data")
+            }
+        }
+        catch _ {
+            printd("Error while parsing json to Dictionary")
+            // TODO: notify user instead of just sending a empty array
+        }
+        return nil
+    }
+    
+    
+    
     
     /**
-        Parse a JSON describing one interaction into a Interaction object
+    Parse a JSON describing one interaction into a Interaction object
     */
     class func parseJSONInteractionToInteractionObject(jsonDico : Dictionary<String, AnyObject>) -> Interaction? {
         
@@ -140,7 +156,7 @@ class APIJSONProcessing: NSObject {
         //and returns nil
         
         //check date and that there is a contact specified as callee or caller
-
+        
         guard let date = jsonDico[CREATED_KEY] as? Int,
             contacts = jsonDico[INTERACTION_CONTACTS] as? Array<Dictionary<String,AnyObject>>
             where contacts.count > 0
@@ -148,7 +164,7 @@ class APIJSONProcessing: NSObject {
                 return nil
         }
         print("cn: \(contacts.count)")
-
+        
         
         //Check if the id for that contact is specified
         guard let contactID = contacts[0][ID_KEY] as? String else {
@@ -189,30 +205,57 @@ class APIJSONProcessing: NSObject {
         
         //duration is nil if it's sms, not nil if it's a call
         let duration = jsonDico[INTERACTION_DURATION] as? Int
-
+        
         
         return Interaction(interactionDirection: interactionDirection,
             type: interactionType,
             date: Int64(date),
             phoneNumber: phoneNumber,
             contactID: contactID,
-            duration:duration)        
+            duration:duration)
     }
     
     
-    /**
-    Part a json containing many interactions into an array of Interaction objects
-    */
-    class func parseJSONArrayOfInteractions(jsonArray : Array<Dictionary<String, AnyObject>>) -> [Interaction] {
-        print(jsonArray)
-        var interactions = Array<Interaction>()
-        for dic in jsonArray {
-            if let interaction = parseJSONInteractionToInteractionObject(dic) {
-                interactions.append(interaction)
+//    /**
+//    Part a json containing many interactions into an array of Interaction objects
+//    */
+//    class func parseJSONArrayOfInteractions(jsonArray : Array<Dictionary<String, AnyObject>>) -> [Interaction] {
+//        
+//        
+//        var interactions = Array<Interaction>()
+//        for dic in jsonArray {
+//            if let interaction = parseJSONInteractionToInteractionObject(dic) {
+//                interactions.append(interaction)
+//            }
+//        }
+//        return interactions
+//    }
+    
+    
+    class func parseResponseGetInteractionWithContact(data : NSData) -> [Interaction]? {
+        do {
+            if let interactionData = try NSJSONSerialization.JSONObjectWithData(data,
+                options: NSJSONReadingOptions.AllowFragments)["data"] as? Array<Dictionary<String, AnyObject>> {
+                
+                    var interactions = Array<Interaction>()
+                    for dic in interactionData {
+                        if let interaction = parseJSONInteractionToInteractionObject(dic) {
+                            interactions.append(interaction)
+                        }
+                    }
+                    return interactions
+            }
+            else {
+                printe("Error with the data")
             }
         }
-        return interactions
+        catch _ {
+            printd("Error while parsing json to Dictionary")
+            // TODO: notify user instead of just sending a empty array
+        }
+        return nil
     }
+    
     
     
     class func parseTriggerToken(jsonRawData : NSData?) -> String? {

@@ -12,6 +12,7 @@
 		C80A42F31BD2AA400055A15F /* JGProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C80A42F21BD2AA370055A15F /* JGProgressHUD.framework */; };
 		C80A42F41BD2AA400055A15F /* JGProgressHUD.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C80A42F21BD2AA370055A15F /* JGProgressHUD.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C80A42FB1BD2B9B20055A15F /* ContactsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */; settings = {ASSET_TAGS = (); }; };
+		C815E2F91BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json in Resources */ = {isa = PBXBuildFile; fileRef = C815E2F81BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json */; settings = {ASSET_TAGS = (); }; };
 		C896ED051BD2E75B0008BE17 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = C896ED041BD2E75B0008BE17 /* Utility.swift */; settings = {ASSET_TAGS = (); }; };
 		C8AC43461BD11CE70083146C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43451BD11CE70083146C /* AppDelegate.swift */; };
 		C8AC43481BD11CE70083146C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43471BD11CE70083146C /* ViewController.swift */; };
@@ -97,6 +98,7 @@
 		C80A42D81BD274710055A15F /* jsonManyContactTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = jsonManyContactTest.json; sourceTree = "<group>"; };
 		C80A42E71BD2AA370055A15F /* JGProgressHUD.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JGProgressHUD.xcodeproj; path = JGProgressHUD/JGProgressHUD.xcodeproj; sourceTree = "<group>"; };
 		C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsTVC.swift; sourceTree = "<group>"; };
+		C815E2F81BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = jsonCorruptedManyContactTest.json; sourceTree = "<group>"; };
 		C896ED041BD2E75B0008BE17 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		C8AC43421BD11CE70083146C /* MuchContacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MuchContacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8AC43451BD11CE70083146C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 			isa = PBXGroup;
 			children = (
 				C80A42D71BD274710055A15F /* jsonContactTest.json */,
+				C815E2F81BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json */,
 				C80A42D81BD274710055A15F /* jsonManyContactTest.json */,
 				C8AC43771BD11CFA0083146C /* TestNetworkAndObjects.swift */,
 				C8B9B2841BD26F0B007C92D7 /* MuchContactsAppTests.swift */,
@@ -420,6 +423,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C80A42D91BD274710055A15F /* jsonContactTest.json in Resources */,
+				C815E2F91BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json in Resources */,
 				C80A42DA1BD274710055A15F /* jsonManyContactTest.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

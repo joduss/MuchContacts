@@ -1,4 +1,4 @@
-{ "data" : [{
+{ "data": [{
     "privacy": "PUBLIC",
     "contactType": "PERSON",
     "companyName": null,
@@ -235,7 +235,7 @@
  "tags": [
           "test1234"
           ],
- "profiles": [],
+ "profiles": []
  "lists": [],
  "profileUrl": null,
  "metaRefs": [
@@ -266,4 +266,4 @@
  "favorite": false
  }
  ]
-}
+ }
