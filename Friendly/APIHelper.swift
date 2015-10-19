@@ -409,6 +409,48 @@ class APIHelper: NSObject {
     
     
     //================================
+    /** Returns all the interfactions that happened between the user and the specified contacts*/
+    func getAllInteraction(completionHandler:((interactions : [Interaction]) -> Void)) {
+        
+        printd("PREPARE SEND REQUEST for INTERACTION\n")
+        
+        
+        //If the token is missing, abord
+        guard let authToken = authToken else {
+            //Not logged in
+            completionHandler(interactions: Array<Interaction>())
+            return
+        }
+        
+        let url = NSURL(string: baseUrl + "/interactions/list")
+        let request = NSMutableURLRequest(URL: url!)
+        
+        let completionTask = { (data : NSData?, response : NSURLResponse?, error : NSError?) -> Void in
+            print("RESPONSE INTERACTION \(response))")
+            if let data = data,
+                interactions = APIJSONProcessing.parseResponseGetInteractionWithContact(data) {
+                    completionHandler(interactions: interactions)
+            }
+            else {
+                printe("Error with the data")
+                completionHandler(interactions: Array<Interaction>())
+            }
+        }
+        
+        let dataParam = ["offset" : 0, "limit" : 1000, "filters" : Dictionary<String,AnyObject>()]
+        do {
+            request.HTTPBody = try NSJSONSerialization.dataWithJSONObject(dataParam, options: NSJSONWritingOptions.PrettyPrinted)
+            request.addValue(authToken, forHTTPHeaderField: APIHelper.TOKEN_AUTHTOKEN_KEY)
+            
+            HTTPComm.postJSON(session: session, request: request, completionHandler: completionTask)
+        }
+        catch _ {
+            completionHandler(interactions: Array<Interaction>())
+        }
+    }
+    
+    
+    //================================
     /**Test creation of Interaction
     */
     // TODO for call: update the interaction with the duration!

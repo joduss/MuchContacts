@@ -178,7 +178,6 @@ class APIJSONProcessing: NSObject {
             else {
                 return nil
         }
-        print("cn: \(contacts.count)")
         
         
         //Check if the id for that contact is specified
@@ -296,6 +295,33 @@ class APIJSONProcessing: NSObject {
         catch _ {
             return nil
         }
+    }
+    
+    
+    //================================
+    /*Parse the response that is received when requesting the list of interaction with a contact */
+    class func parseResponseGetAllInteractions(data : NSData) -> [Interaction]? {
+        do {
+            if let interactionData = try NSJSONSerialization.JSONObjectWithData(data,
+                options: NSJSONReadingOptions.AllowFragments)["data"] as? Array<Dictionary<String, AnyObject>> {
+                    
+                    var interactions = Array<Interaction>()
+                    for dic in interactionData {
+                        if let interaction = parseJSONInteractionToInteractionObject(dic) {
+                            interactions.append(interaction)
+                        }
+                    }
+                    return interactions
+            }
+            else {
+                printe("Error with the data")
+            }
+        }
+        catch _ {
+            printd("Error while parsing json to Dictionary")
+            // TODO: notify user instead of just sending a empty array
+        }
+        return nil
     }
     
     

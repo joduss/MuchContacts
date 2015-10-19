@@ -11,12 +11,15 @@ import JGProgressHUD
 
 class ContactsTVC: UITableViewController {
     
-    var contacts = Array<Contact>()
-    
+    private(set) var contacts = Array<Contact>()
+    var loadingBlocks = 0
+    let hud = JGProgressHUD(style: JGProgressHUDStyle.Dark)
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBarHidden = false
-        
+        hud.indicatorView = JGProgressHUDIndeterminateIndicatorView.init(HUDStyle: hud.style)
+
         self.loadData()
     }
     
@@ -26,14 +29,16 @@ class ContactsTVC: UITableViewController {
     
     //Download the data from the server
     func loadData() {
-        let hud = JGProgressHUD(style: JGProgressHUDStyle.Dark)
-        hud.indicatorView = JGProgressHUDIndeterminateIndicatorView.init(HUDStyle: hud.style)
         hud.showInView(self.navigationController?.view, animated: true)
+        loadingBlocks++
         
         apiHelper.getAllContacts(0, completionHandler: {contacts in
             self.contacts = contacts
             self.tableView.reloadData()
-            hud.dismissAnimated(true)
+            self.loadingBlocks--
+            if(self.loadingBlocks == 0){
+                self.hud.dismissAnimated(true)
+            }
         })
     }
     
