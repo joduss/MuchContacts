@@ -45,4 +45,27 @@ class HTTPComm: NSObject {
         send(session: session, request: request, completionHandler: handler)
     }
     
+    
+    
+    //Hack: Contact google website to check internet availability
+    class func sendRequestToGoogle(completionHandle: (success : Bool) -> Void) {
+        let url = NSURL(string: "https://www.google.com")
+        let request = NSMutableURLRequest(URL: url!)
+        request.HTTPMethod = "GET"
+        
+        let task = {(data : NSData?, response : NSURLResponse?, error : NSError?) in
+            if let _ = response as? NSHTTPURLResponse {
+                completionHandle(success: true)
+                
+            }
+            else {
+                //no response: problem of internet most likely
+                completionHandle(success: false)
+            }
+        }
+        NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: task).resume()
+    }
+    
+
+    
 }

@@ -288,6 +288,9 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
                 self.interactions.insert(newInteraction, atIndex: 0)
                 self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Middle)
                 
+                //Show message to user about connection problem
+                Utility.testInternetAvailabilityAndShowErrorMessage(self)
+                
                 apiHelper.createInteraction(newInteraction, completionHandler: { success in
                     //TODO: Handle a failure
                     
@@ -317,17 +320,18 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
                     
                     let newInteraction = Interaction(interactionDirection: InteractionDirection.OUTBOUND,
                         type: InteractionType.SMS,
-                        date: Utility.getCurrentTimeInSeconds(),
+                        date: Utility.getCurrentTimeInSeconds() * 1000,
                         phoneNumber: number, contactID: contactID)
-                    
-                    print("date:\(NSDate(timeIntervalSince1970: Utility.getCurrentTimeInSeconds()*1000).description))")
-                    
+                                        
                     self.interactions.insert(newInteraction, atIndex: 0)
                     self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Middle)
                     
                     
                     //show progresshud
                     //hud.showInView(self.navigationController?.view, animated: true)
+                    
+                    //Show message to user about connection problem
+                    Utility.testInternetAvailabilityAndShowErrorMessage(self)
                     
                     apiHelper.createInteraction(newInteraction, completionHandler: { success in
                         //TODO: Handle a failure

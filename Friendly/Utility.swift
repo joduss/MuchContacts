@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class Utility {
     
@@ -42,5 +43,16 @@ class Utility {
     /**Return the number of seconds that have passed since 1970*/
     class func getCurrentTimeInSeconds() -> NSTimeInterval {
         return NSDate(timeIntervalSinceNow: 0).timeIntervalSince1970
+    }
+    
+    class func testInternetAvailabilityAndShowErrorMessage(vc : UIViewController) {
+        HTTPComm.sendRequestToGoogle({success in
+            if(success == false){
+                let alert = UIAlertController(title: "Connection error", message: "Please check your internet connection!", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                vc.presentViewController(alert, animated: true, completion: nil)
+            }
+            
+        })
     }
 }

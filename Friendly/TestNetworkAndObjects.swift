@@ -284,6 +284,19 @@ class TestNetworkAndObjects: XCTestCase {
     
 
     
+    func testGoogle(){
+        let expectation = expectationWithDescription("waiting")
+
+        
+        HTTPComm.sendRequestToGoogle({success in
+            expectation.fulfill()
+            XCTAssert(success)
+
+        })
+        waitForExpectationsWithTimeout(20, handler: nil)
+
+    }
+    
     
     
 

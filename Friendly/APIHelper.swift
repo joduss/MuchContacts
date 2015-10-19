@@ -469,17 +469,22 @@ class APIHelper: NSObject {
         // TODO HANDLE ERROR 401, 403, 409
         let completionTask = { (data : NSData?, response : NSURLResponse?, error : NSError?) -> Void in
             print("Response for adding interaction \(response))")
-            let statusCode = (response as! NSHTTPURLResponse).statusCode
-            
-            //printd("data \(NSString(data: data!, encoding: NSUTF8StringEncoding))")
-            
-            switch statusCode {
-            case 201:
-                completionHandler?(success: true)
-                break
-            default:
+            if let rep = response {
+                let statusCode = (rep as! NSHTTPURLResponse).statusCode
+                
+                //printd("data \(NSString(data: data!, encoding: NSUTF8StringEncoding))")
+                
+                switch statusCode {
+                case 201:
+                    completionHandler?(success: true)
+                    break
+                default:
+                    completionHandler?(success: false)
+                    break
+                }
+            }
+            else {
                 completionHandler?(success: false)
-                break
             }
         }
         

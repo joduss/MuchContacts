@@ -42,6 +42,9 @@ class InteractionsTVC: ContactsTVC {
                 self.hud.dismissAnimated(true)
             }
         })
+        
+        //Show message to user about connection problem
+        Utility.testInternetAvailabilityAndShowErrorMessage(self)
 
     }
 
