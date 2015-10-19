@@ -17,6 +17,18 @@ class Utility {
     }
 
     
+    class func generateDeviceID() -> String{
+        //generate unique ID:
+        let part1 = arc4random_uniform(100000)
+        let part2 = arc4random_uniform(100000)
+        let part3 = arc4random_uniform(100000)
+        let part4 = arc4random_uniform(100000)
+
+        return "\(part1)-\(part2)-\(part3)-\(part4)"
+    }
     
     
+    class func getCurrentTimeMilis() -> NSTimeInterval {
+        return NSDate(timeIntervalSinceNow: 0).timeIntervalSince1970
+    }
 }
