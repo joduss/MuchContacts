@@ -121,7 +121,8 @@ class APIHelper: NSObject {
                 let completionHandler = {
                     (data : NSData?, response:NSURLResponse?, error:NSError?) -> Void in
                     
-                    // TODO Handle case of errors
+                    // TODO Handle case of errors better than just "avoiding" them
+                    //Do something with them!
                     
                     //Handles the response
                     if(error != nil) {
@@ -249,6 +250,8 @@ class APIHelper: NSObject {
                     self.saveKeychainData()
                     completion?(loggedIn: true, wrongCredentials: false)
                 } else {
+                    //parsing failed
+                    printe("trigger token parsing failed")
                     completion?(loggedIn: false, wrongCredentials: false)
                 }
                 break
@@ -275,6 +278,7 @@ class APIHelper: NSObject {
             HTTPComm.putJSON(session: session, request: request, completionHandler: completionTask)
         }
         catch _ {
+            // TODO: handle that error (json issue)
             completion?(loggedIn: false, wrongCredentials: false)
         }
         
@@ -384,6 +388,8 @@ class APIHelper: NSObject {
         //If the token is missing, abord
         guard let authToken = authToken else {
             //Not logged in
+            // TODO handel error. Should not happen.
+            // if it's the case: inconsistency state of the app
             completionHandler(interactions: Array<Interaction>())
             return
         }
@@ -479,11 +485,14 @@ class APIHelper: NSObject {
                     completionHandler?(success: true)
                     break
                 default:
+                    // TODO handle that error
                     completionHandler?(success: false)
                     break
                 }
             }
             else {
+                //TODO handle the error
+                //most likely server offline or internet connection issue
                 completionHandler?(success: false)
             }
         }
@@ -505,6 +514,7 @@ class APIHelper: NSObject {
             HTTPComm.postJSON(session: session, request: request, completionHandler: completionTask)
         }
         catch _ {
+            //should never happen normally
             completionHandler?(success: false)
         }
     }

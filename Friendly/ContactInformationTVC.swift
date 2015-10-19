@@ -293,7 +293,8 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
                 
                 apiHelper.createInteraction(newInteraction, completionHandler: { success in
                     //TODO: Handle a failure
-                    
+                    printe("an error was encountered while uploading the interaction record.")
+
                     //Reload the data to show the new interaction
                     //self.loadData()
                 })
@@ -322,7 +323,7 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
                         type: InteractionType.SMS,
                         date: Utility.getCurrentTimeInSeconds() * 1000,
                         phoneNumber: number, contactID: contactID)
-                                        
+                    
                     self.interactions.insert(newInteraction, atIndex: 0)
                     self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Middle)
                     
@@ -334,7 +335,8 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
                     Utility.testInternetAvailabilityAndShowErrorMessage(self)
                     
                     apiHelper.createInteraction(newInteraction, completionHandler: { success in
-                        //TODO: Handle a failure
+                        //TODO: Handle case of failure
+                        printe("an error was encountered while uploading the interaction record.")
                         
                         //Reload the data to show the new interaction
                         //self.loadData()
