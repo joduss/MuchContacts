@@ -26,7 +26,7 @@ class Interaction: NSObject {
 
     let direction : InteractionDirection
     let type : InteractionType
-    let date : Int64
+    let date : NSTimeInterval
     
     //known by the system
     let contactID : String
@@ -36,7 +36,7 @@ class Interaction: NSObject {
     let duration : Int? //only for phone. For SMS will be nil
     
     
-    init(interactionDirection direction:InteractionDirection, type:InteractionType, date: Int64, phoneNumber:String, contactID:String, duration : Int? = nil) {
+    init(interactionDirection direction:InteractionDirection, type:InteractionType, date: NSTimeInterval, phoneNumber:String, contactID:String, duration : Int? = nil) {
         self.direction = direction
         self.type = type
         self.date = date

@@ -22,10 +22,15 @@ class ContactsTVC: UITableViewController {
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.loadData()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+
+    }
+    
+    func loadData() {
         
         let hud = JGProgressHUD(style: JGProgressHUDStyle.Dark)
         hud.indicatorView = JGProgressHUDIndeterminateIndicatorView.init(HUDStyle: hud.style)
@@ -84,16 +89,25 @@ class ContactsTVC: UITableViewController {
         return cell
     }
     
+    /** Handle selection of a cell (a contact), which will display information about the it*/
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.performSegueWithIdentifier("showContactDetailsSegue", sender: contacts[indexPath.row])
+    }
     
+    
+    
+    
+    // MARK: - IBACTION
     @IBAction func logoutAction(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
         apiHelper.logout()
     }
 
-    /** Handle selection of a cell (a contact), which will display information about the it*/
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.performSegueWithIdentifier("showContactDetailsSegue", sender: contacts[indexPath.row])
+    @IBAction func refresh(sender: AnyObject) {
+        self.loadData()
     }
+    
+
     
     
     /*

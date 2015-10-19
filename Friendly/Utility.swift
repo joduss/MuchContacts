@@ -27,8 +27,8 @@ class Utility {
         return "\(part1)-\(part2)-\(part3)-\(part4)"
     }
     
-    
-    class func getCurrentTimeMilis() -> NSTimeInterval {
+    /**Return the number of seconds that have passed since 1970*/
+    class func getCurrentTimeInSeconds() -> NSTimeInterval {
         return NSDate(timeIntervalSinceNow: 0).timeIntervalSince1970
     }
 }

@@ -23,33 +23,34 @@ class ContactInformationTVC: UITableViewController {
     private var interactions = Array<Interaction>()
     
     private var callStartTime = 0.0
-
+    private var numberBeingCalled : String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
+        
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 50
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         if let _ = contact {
             return 2
         }
         return 0
     }
-
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         
@@ -61,7 +62,7 @@ class ContactInformationTVC: UITableViewController {
             var numberOfInfo = 1 //1 for the name/firstname
             if let mails = contact?.emails {
                 numberOfInfo += mails.count
-
+                
             }
             if let phones = contact?.phones {
                 numberOfInfo += phones.count
@@ -81,10 +82,10 @@ class ContactInformationTVC: UITableViewController {
         }
         return nil
     }
-
+    
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-
+        
         
         if(indexPath.section == 0){
             return prepareCellForSection0(tableView, forIndexPath: indexPath)
@@ -92,7 +93,7 @@ class ContactInformationTVC: UITableViewController {
             return prepareCellForSection1ForActivity(tableView, forIndexPath: indexPath)
         }
         let cell = UITableViewCell()
-
+        
         
         return cell
     }
@@ -100,7 +101,7 @@ class ContactInformationTVC: UITableViewController {
     
     /**Prepare a cell for the section 1*/
     func prepareCellForSection0(tv : UITableView, forIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-           //init a default cell
+        //init a default cell
         var cell = UITableViewCell()
         guard let c = contact else {
             return cell //return the cell without configuring it
@@ -141,7 +142,7 @@ class ContactInformationTVC: UITableViewController {
         let nameLabel = cell.viewWithTag(3) as! UILabel
         let interactionNumberLabel = cell.viewWithTag(4) as! UILabel
         let dateLabel = cell.viewWithTag(5) as! UILabel
-                
+        
         
         if(interaction.type == InteractionType.CALL) {
             imageView.image = UIImage(named: "phone-icon")
@@ -157,8 +158,8 @@ class ContactInformationTVC: UITableViewController {
         }
         
         if let interactionContact = findContactWithID(interaction.contactID) {
-        
-        nameLabel.text = interactionContact.nameToDisplay()
+            
+            nameLabel.text = interactionContact.nameToDisplay()
             interactionNumberLabel.text = interaction.phoneNumber
             
             //format the date:
@@ -173,8 +174,8 @@ class ContactInformationTVC: UITableViewController {
         
         return cell
     }
-
-
+    
+    
     func findContactWithID(contactID : String) -> Contact? {
         for c in allContact {
             if(c.contactID == contactID){
@@ -192,69 +193,85 @@ class ContactInformationTVC: UITableViewController {
                 //is an email
             } else if indexPath.row >= 1 + c.emails.count && indexPath.row <= 1 + c.emails.count + c.phones.count {
                 //this is making a call
-                UIApplication.sharedApplication().openURL(NSURL(string: "tel:\(c.phones[indexPath.row - (1 + c.emails.count)].number)")!)
+                let phoneNumber = c.phones[indexPath.row - (1 + c.emails.count)].number
+                numberBeingCalled = phoneNumber
+                UIApplication.sharedApplication().openURL(NSURL(string: "tel:\(phoneNumber)")!)
                 NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("callEnded"), name: "CALL", object: nil)
                 
                 
-                callStartTime = Utility.getCurrentTimeMilis()
+                callStartTime = Utility.getCurrentTimeInSeconds()
             }
         }
     }
     
     func callEnded() {
-        let callStopTime = Utility.getCurrentTimeMilis()
-        let duration = callStopTime - callStartTime
-    
-        let minutes = Int(duration / Double(1000 * 60))
-        let seconds = duration / 1000.0 - Double(minutes)*60.0
         
-        print("duration: \(minutes):\(seconds)")
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: "CALL", object: nil)
-
+        if let contactID = contact?.contactID,
+            number = numberBeingCalled {
+                let callStopTime = Utility.getCurrentTimeInSeconds()
+                let duration = callStopTime - callStartTime
+                
+                let minutes = Int(duration / Double(60))
+                let seconds = Int(duration - Double(minutes)*60.0)
+                
+                print("duration: \(minutes):\(seconds)")
+                NSNotificationCenter.defaultCenter().removeObserver(self, name: "CALL", object: nil)
+                
+                
+                let newInteraction = Interaction(interactionDirection: InteractionDirection.OUTBOUND,
+                    type: InteractionType.CALL,
+                    date: Utility.getCurrentTimeInSeconds(),
+                    phoneNumber: number, contactID: contactID)
+                
+                apiHelper.createInteraction(newInteraction, completionHandler: nil)
+                
+                numberBeingCalled = nil
+        }
+        
     }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    // Return false if you do not want the specified item to be editable.
+    return true
     }
     */
-
+    
     /*
     // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    if editingStyle == .Delete {
+    // Delete the row from the data source
+    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+    } else if editingStyle == .Insert {
+    // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }
     }
     */
-
+    
     /*
     // Override to support rearranging the table view.
     override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
+    
     }
     */
-
+    
     /*
     // Override to support conditional rearranging of the table view.
     override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    // Return false if you do not want the item to be re-orderable.
+    return true
     }
     */
-
+    
     /*
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // Get the new view controller using segue.destinationViewController.
+    // Pass the selected object to the new view controller.
     }
     */
-
+    
 }

@@ -50,6 +50,14 @@ class TestNetworkAndObjects: XCTestCase {
         }
     }
     
+    /// test to create one contact from empty dictionary
+    // No contact should be returned
+    func testOneContactFromEmptyDictionary() {
+        let c = APIJSONProcessing.parseContactFromJSONDictionary(Dictionary<String, AnyObject>())
+        XCTAssertEqual(nil, c)
+        
+    }
+    
     
     /// test to create may contact instances from json data
     //test that the sorting function by lastname works
@@ -258,7 +266,7 @@ class TestNetworkAndObjects: XCTestCase {
                 XCTAssert(found)
                 let newInteraction = Interaction(interactionDirection: InteractionDirection.INBOUND,
                     type: InteractionType.SMS,
-                    date: Int64(CFAbsoluteTimeGetCurrent()),
+                    date: Utility.getCurrentTimeInSeconds(),
                     phoneNumber: "+41706006060",
                     contactID: desiredContact.contactID!)
                 

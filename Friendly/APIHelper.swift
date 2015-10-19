@@ -53,11 +53,11 @@ class APIHelper: NSObject {
         super.init()
         
        print("expire: \(JNKeychain.loadValueForKey(EXPIRE_SAVE_KEY)), ")
-        print("current: \(Utility.getCurrentTimeMilis())")
+        print("current: \(Utility.getCurrentTimeInSeconds())")
 
 
         if let expireDate = JNKeychain.loadValueForKey(EXPIRE_SAVE_KEY) as? Int
-            where Utility.getCurrentTimeMilis() < Double(expireDate)
+            where Utility.getCurrentTimeInSeconds() < Double(expireDate)
         {
             //The token is not expired, the login is still valid
             

@@ -157,7 +157,7 @@ class APIJSONProcessing: NSObject {
         
         //check date and that there is a contact specified as callee or caller
         
-        guard let date = jsonDico[CREATED_KEY] as? Int,
+        guard let date = jsonDico[CREATED_KEY] as? NSTimeInterval,
             contacts = jsonDico[INTERACTION_CONTACTS] as? Array<Dictionary<String,AnyObject>>
             where contacts.count > 0
             else {
@@ -209,7 +209,7 @@ class APIJSONProcessing: NSObject {
         
         return Interaction(interactionDirection: interactionDirection,
             type: interactionType,
-            date: Int64(date),
+            date: date,
             phoneNumber: phoneNumber,
             contactID: contactID,
             duration:duration)
