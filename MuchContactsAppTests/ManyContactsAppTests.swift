@@ -8,7 +8,7 @@
 
 import XCTest
 
-class MuchContactsAppTests: XCTestCase {
+class ManyContactsAppTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

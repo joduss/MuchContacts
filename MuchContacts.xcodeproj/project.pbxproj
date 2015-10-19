@@ -14,6 +14,7 @@
 		C80A42FB1BD2B9B20055A15F /* ContactsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */; settings = {ASSET_TAGS = (); }; };
 		C815E2F91BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json in Resources */ = {isa = PBXBuildFile; fileRef = C815E2F81BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json */; settings = {ASSET_TAGS = (); }; };
 		C82216A71BD5279D00B5BD92 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C82216A61BD5279D00B5BD92 /* MessageUI.framework */; };
+		C82216AB1BD567D100B5BD92 /* InteractionsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82216AA1BD567D000B5BD92 /* InteractionsTVC.swift */; settings = {ASSET_TAGS = (); }; };
 		C896ED051BD2E75B0008BE17 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = C896ED041BD2E75B0008BE17 /* Utility.swift */; settings = {ASSET_TAGS = (); }; };
 		C8AC43461BD11CE70083146C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43451BD11CE70083146C /* AppDelegate.swift */; };
 		C8AC43481BD11CE70083146C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43471BD11CE70083146C /* ViewController.swift */; };
@@ -28,7 +29,7 @@
 		C8AC43861BD14E520083146C /* HTTPComm.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43851BD14E520083146C /* HTTPComm.swift */; settings = {ASSET_TAGS = (); }; };
 		C8AC43881BD1550D0083146C /* APIJSONProcessing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43871BD1550D0083146C /* APIJSONProcessing.swift */; settings = {ASSET_TAGS = (); }; };
 		C8B9B27A1BD2421F007C92D7 /* Interaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B9B2791BD2421F007C92D7 /* Interaction.swift */; settings = {ASSET_TAGS = (); }; };
-		C8B9B2851BD26F0B007C92D7 /* MuchContactsAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B9B2841BD26F0B007C92D7 /* MuchContactsAppTests.swift */; };
+		C8B9B2851BD26F0B007C92D7 /* ManyContactsAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B9B2841BD26F0B007C92D7 /* ManyContactsAppTests.swift */; };
 		C8B9B28C1BD2706D007C92D7 /* TestNetworkAndObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AC43771BD11CFA0083146C /* TestNetworkAndObjects.swift */; settings = {ASSET_TAGS = (); }; };
 		C8D4F26C1BD394DB00701FC8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8D4F26B1BD394DB00701FC8 /* Security.framework */; };
 		C8D4F2761BD3EEC800701FC8 /* JNKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C8D4F2751BD3EEC800701FC8 /* JNKeychain.m */; settings = {ASSET_TAGS = (); }; };
@@ -101,6 +102,7 @@
 		C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsTVC.swift; sourceTree = "<group>"; };
 		C815E2F81BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = jsonCorruptedManyContactTest.json; sourceTree = "<group>"; };
 		C82216A61BD5279D00B5BD92 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		C82216AA1BD567D000B5BD92 /* InteractionsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractionsTVC.swift; sourceTree = "<group>"; };
 		C896ED041BD2E75B0008BE17 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		C8AC43421BD11CE70083146C /* MuchContacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MuchContacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8AC43451BD11CE70083146C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -121,7 +123,7 @@
 		C8AC43871BD1550D0083146C /* APIJSONProcessing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIJSONProcessing.swift; sourceTree = "<group>"; };
 		C8B9B2791BD2421F007C92D7 /* Interaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Interaction.swift; sourceTree = "<group>"; };
 		C8B9B2821BD26F0B007C92D7 /* MuchContactsAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MuchContactsAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C8B9B2841BD26F0B007C92D7 /* MuchContactsAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuchContactsAppTests.swift; sourceTree = "<group>"; };
+		C8B9B2841BD26F0B007C92D7 /* ManyContactsAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManyContactsAppTests.swift; sourceTree = "<group>"; };
 		C8B9B2861BD26F0B007C92D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C8D4F26B1BD394DB00701FC8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C8D4F2741BD3EEA100701FC8 /* JNKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JNKeychain.h; sourceTree = "<group>"; };
@@ -185,7 +187,7 @@
 				C8D4F26B1BD394DB00701FC8 /* Security.framework */,
 				C80A42E71BD2AA370055A15F /* JGProgressHUD.xcodeproj */,
 				C8AC43441BD11CE70083146C /* MuchContacts */,
-				C8B9B2831BD26F0B007C92D7 /* MuchContactsAppTests */,
+				C8B9B2831BD26F0B007C92D7 /* ManyContactsAppTests */,
 				C8AC43671BD11CE80083146C /* MuchContactsUITests */,
 				C8AC43431BD11CE70083146C /* Products */,
 			);
@@ -241,16 +243,17 @@
 			name = API;
 			sourceTree = "<group>";
 		};
-		C8B9B2831BD26F0B007C92D7 /* MuchContactsAppTests */ = {
+		C8B9B2831BD26F0B007C92D7 /* ManyContactsAppTests */ = {
 			isa = PBXGroup;
 			children = (
 				C80A42D71BD274710055A15F /* jsonContactTest.json */,
 				C815E2F81BD4B6AF0015A728 /* jsonCorruptedManyContactTest.json */,
 				C80A42D81BD274710055A15F /* jsonManyContactTest.json */,
 				C8AC43771BD11CFA0083146C /* TestNetworkAndObjects.swift */,
-				C8B9B2841BD26F0B007C92D7 /* MuchContactsAppTests.swift */,
+				C8B9B2841BD26F0B007C92D7 /* ManyContactsAppTests.swift */,
 				C8B9B2861BD26F0B007C92D7 /* Info.plist */,
 			);
+			name = ManyContactsAppTests;
 			path = MuchContactsAppTests;
 			sourceTree = "<group>";
 		};
@@ -269,6 +272,7 @@
 				C8D4F27C1BD401B600701FC8 /* ContactInformationTVC.swift */,
 				C8AC43471BD11CE70083146C /* ViewController.swift */,
 				C80A42F91BD2B3F70055A15F /* ContactsTVC.swift */,
+				C82216AA1BD567D000B5BD92 /* InteractionsTVC.swift */,
 			);
 			name = "VC classes";
 			sourceTree = "<group>";
@@ -276,9 +280,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C8AC43411BD11CE70083146C /* MuchContacts */ = {
+		C8AC43411BD11CE70083146C /* ManyContacts */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C8AC436D1BD11CE80083146C /* Build configuration list for PBXNativeTarget "MuchContacts" */;
+			buildConfigurationList = C8AC436D1BD11CE80083146C /* Build configuration list for PBXNativeTarget "ManyContacts" */;
 			buildPhases = (
 				C8AC433E1BD11CE70083146C /* Sources */,
 				C8AC433F1BD11CE70083146C /* Frameworks */,
@@ -290,7 +294,7 @@
 			dependencies = (
 				C80A42F61BD2AA400055A15F /* PBXTargetDependency */,
 			);
-			name = MuchContacts;
+			name = ManyContacts;
 			productName = Friendly;
 			productReference = C8AC43421BD11CE70083146C /* MuchContacts.app */;
 			productType = "com.apple.product-type.application";
@@ -373,7 +377,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				C8AC43411BD11CE70083146C /* MuchContacts */,
+				C8AC43411BD11CE70083146C /* ManyContacts */,
 				C8AC43631BD11CE80083146C /* MuchContactsUITests */,
 				C8B9B2811BD26F0B007C92D7 /* MuchContactsAppTests */,
 			);
@@ -447,6 +451,7 @@
 				C8AC43881BD1550D0083146C /* APIJSONProcessing.swift in Sources */,
 				C8AC43841BD145AF0083146C /* DebugFunctions.swift in Sources */,
 				C8AC43811BD13EE30083146C /* APIHelper.swift in Sources */,
+				C82216AB1BD567D100B5BD92 /* InteractionsTVC.swift in Sources */,
 				C8B9B27A1BD2421F007C92D7 /* Interaction.swift in Sources */,
 				C8D4F27D1BD401B600701FC8 /* ContactInformationTVC.swift in Sources */,
 				C8AC43461BD11CE70083146C /* AppDelegate.swift in Sources */,
@@ -467,7 +472,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C8B9B2851BD26F0B007C92D7 /* MuchContactsAppTests.swift in Sources */,
+				C8B9B2851BD26F0B007C92D7 /* ManyContactsAppTests.swift in Sources */,
 				C8B9B28C1BD2706D007C92D7 /* TestNetworkAndObjects.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -482,12 +487,12 @@
 		};
 		C8AC43661BD11CE80083146C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C8AC43411BD11CE70083146C /* MuchContacts */;
+			target = C8AC43411BD11CE70083146C /* ManyContacts */;
 			targetProxy = C8AC43651BD11CE80083146C /* PBXContainerItemProxy */;
 		};
 		C8B9B2881BD26F0B007C92D7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C8AC43411BD11CE70083146C /* MuchContacts */;
+			target = C8AC43411BD11CE70083146C /* ManyContacts */;
 			targetProxy = C8B9B2871BD26F0B007C92D7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -606,7 +611,7 @@
 				INFOPLIST_FILE = Friendly/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.much.contacts;
+				PRODUCT_BUNDLE_IDENTIFIER = com.many.contacts;
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)";
 				PRODUCT_NAME = MuchContacts;
 				SWIFT_OBJC_BRIDGING_HEADER = "Friendly/MuchContacts-Bridging-Header.h";
@@ -623,7 +628,7 @@
 				INFOPLIST_FILE = Friendly/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.much.contacts;
+				PRODUCT_BUNDLE_IDENTIFIER = com.many.contacts;
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)";
 				PRODUCT_NAME = MuchContacts;
 				SWIFT_OBJC_BRIDGING_HEADER = "Friendly/MuchContacts-Bridging-Header.h";
@@ -692,7 +697,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C8AC436D1BD11CE80083146C /* Build configuration list for PBXNativeTarget "MuchContacts" */ = {
+		C8AC436D1BD11CE80083146C /* Build configuration list for PBXNativeTarget "ManyContacts" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C8AC436E1BD11CE80083146C /* Debug */,

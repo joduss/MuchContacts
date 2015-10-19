@@ -20,11 +20,11 @@ class ContactsTVC: UITableViewController {
         self.navigationController?.navigationBarHidden = false
         hud.indicatorView = JGProgressHUDIndeterminateIndicatorView.init(HUDStyle: hud.style)
 
-        self.loadData()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        self.loadData()
     }
     
     //Download the data from the server

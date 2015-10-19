@@ -299,7 +299,7 @@ class APIJSONProcessing: NSObject {
     
     
     //================================
-    /*Parse the response that is received when requesting the list of interaction with a contact */
+    /*Parse the response that is received when requesting the list of all interactions */
     class func parseResponseGetAllInteractions(data : NSData) -> [Interaction]? {
         do {
             if let interactionData = try NSJSONSerialization.JSONObjectWithData(data,

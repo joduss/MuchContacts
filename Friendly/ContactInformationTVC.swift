@@ -176,7 +176,7 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
             interactionNumberLabel.text = interaction.phoneNumber
             
             //format the date:
-            let date = NSDate(timeIntervalSince1970: NSTimeInterval(interaction.date / 1000)) //Should be seconds. So convert ms to s.
+            let date = NSDate(timeIntervalSince1970: NSTimeInterval(interaction.date/1000))
             let formatter = NSDateFormatter()
             formatter.timeStyle = .ShortStyle
             formatter.dateStyle = .LongStyle
@@ -279,16 +279,20 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
 
                 let newInteraction = Interaction(interactionDirection: InteractionDirection.OUTBOUND,
                     type: InteractionType.CALL,
-                    date: Utility.getCurrentTimeInSeconds(),
+                    date: Utility.getCurrentTimeInSeconds()*1000,
                     phoneNumber: number, contactID: contactID)
                 //show progresshud
-                hud.showInView(self.navigationController?.view, animated: true)
+                //hud.showInView(self.navigationController?.view, animated: true)
+
+                
+                self.interactions.insert(newInteraction, atIndex: 0)
+                self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Middle)
                 
                 apiHelper.createInteraction(newInteraction, completionHandler: { success in
                     //TODO: Handle a failure
                     
                     //Reload the data to show the new interaction
-                    self.loadData()
+                    //self.loadData()
                 })
                 
                 phoneNumberInUse = nil
@@ -303,6 +307,8 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
     func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
         controller.dismissViewControllerAnimated(true, completion: nil)
 
+        controller.dismissViewControllerAnimated(true, completion: nil) 
+        
         if(result == MessageComposeResultSent){
             //The user just sent the sms. This interaction will be added
             
@@ -314,14 +320,20 @@ class ContactInformationTVC: UITableViewController, MFMessageComposeViewControll
                         date: Utility.getCurrentTimeInSeconds(),
                         phoneNumber: number, contactID: contactID)
                     
+                    print("date:\(NSDate(timeIntervalSince1970: Utility.getCurrentTimeInSeconds()*1000).description))")
+                    
+                    self.interactions.insert(newInteraction, atIndex: 0)
+                    self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Middle)
+                    
+                    
                     //show progresshud
-                    hud.showInView(self.navigationController?.view, animated: true)
+                    //hud.showInView(self.navigationController?.view, animated: true)
                     
                     apiHelper.createInteraction(newInteraction, completionHandler: { success in
                         //TODO: Handle a failure
                         
                         //Reload the data to show the new interaction
-                        self.loadData()
+                        //self.loadData()
                     })
             }
         }

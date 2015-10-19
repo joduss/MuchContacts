@@ -283,40 +283,7 @@ class TestNetworkAndObjects: XCTestCase {
     
     
 
-    func testDownloadAllInteractions() {
-        let expectation = expectationWithDescription("waiting")
-        apiHelper.login(username: "softswiss@gmail.com", password: "jonathan", completion: {(loggedIn, wrongCredentials) in
-            XCTAssert(loggedIn)
-            
-            
-            
-            //now load the interactions
-            apiHelper.getAllInteraction({(interactions) in
-                print("\(interactions)")
-                XCTAssertEqual(interactions.count, 4)
-                
-                //check that one number called for that contact is +41707998080
-                var numberFound = false
-                for inter in interactions {
-                    if(inter.phoneNumber == "+41705005050") {
-                        numberFound = true
-                        XCTAssertEqual(inter.type, InteractionType.CALL)
-                        XCTAssertEqual(inter.direction,InteractionDirection.OUTBOUND)
-                    }
-                    
-                }
-                XCTAssert(numberFound)
-                
-                
-                expectation.fulfill()
-            })
-            
-            
-            
-            
-        })
-        waitForExpectationsWithTimeout(20, handler: nil)
-    }
+    
     
     
 

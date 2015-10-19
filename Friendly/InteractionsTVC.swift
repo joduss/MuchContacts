@@ -21,11 +21,11 @@ class InteractionsTVC: ContactsTVC {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 50
         self.tableView.allowsSelection = false
-        self.loadData()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        self.loadData()
     }
     
     //Download the data from the server
